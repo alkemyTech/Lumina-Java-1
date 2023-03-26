@@ -10,7 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -25,7 +25,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "FIRST_NAME",nullable = false)
+    @Column(name = "FIRST_NAME", nullable = false)
     private String firstName;
     @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
@@ -41,12 +41,12 @@ public class User {
     @CreationTimestamp
     @Column(name="CREATION_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
-    LocalDate creationDate;
+    LocalDateTime creationDate;
 
     @UpdateTimestamp
     @Column(name="UPDATE_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
-    LocalDate updateDate;
+    LocalDateTime updateDate;
 
     @Column(name = "SOFT_DELETE")
     private boolean softDelete = Boolean.FALSE;
