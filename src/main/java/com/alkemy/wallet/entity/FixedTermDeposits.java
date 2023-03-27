@@ -22,9 +22,10 @@ public class FixedTermDeposits {
     private Long id;
     @Column(name = "AMOUNT", nullable = false)
     private Double amount;
+    private Long account_id;
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account accountId;
+    private Account account;
     @Column(name = "INTEREST", nullable = false)
     private Double interest;
 
