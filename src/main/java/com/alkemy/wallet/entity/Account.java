@@ -27,10 +27,11 @@ public class Account {
     private boolean softDelete = Boolean.FALSE;
     @Column(name = "TRANSACTIONLIMIT")
     private Double transactionLimit;
+    private Long user_id;
 
    @ManyToOne
-    @JoinColumn(name = "USERID", nullable = false)
-    private Users userId;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 
 
