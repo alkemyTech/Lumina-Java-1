@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -12,15 +11,12 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-
 @Entity
 @Table(name = "accounts")
-
 public class Accounts {
-    public enum TypeCurrency {usd, ars}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(name = "CURRENCY", nullable = false)
     @Enumerated(value=EnumType.STRING)
     private TypeCurrency currency;
@@ -28,6 +24,8 @@ public class Accounts {
     private Double balance;
     @Column(name = "SOFT_DELETE")
     private boolean softDelete = Boolean.FALSE;
+    @Column(name = "TRANSACTIONLIMIT")
+    private Double transactionLimit;
 
   /*  @ManyToOne
     @JoinColumn(name = "USERID", nullable = false)
