@@ -31,7 +31,7 @@ public class Account {
 
 
    @ManyToOne
-    @JoinColumn(name = "USERID", nullable = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
     private User user_id;
 
     @CreationTimestamp
