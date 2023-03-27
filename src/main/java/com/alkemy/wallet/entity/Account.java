@@ -34,9 +34,6 @@ public class Account {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
-
-
     @CreationTimestamp
     @Column(name="CREATION_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
