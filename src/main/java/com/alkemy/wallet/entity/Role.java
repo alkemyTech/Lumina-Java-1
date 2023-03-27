@@ -2,16 +2,17 @@ package com.alkemy.wallet.entity;
 
 import com.alkemy.wallet.enums.RoleEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,8 +29,6 @@ public class Role {
     private RoleEnum name;
     @Column(name = "DESCRIPTION", nullable = true)
     private String description;
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private Set<User> users= new HashSet<>();
 
     @CreationTimestamp
     @Column(name="CREATION_DATE")
@@ -40,4 +39,8 @@ public class Role {
     @Column(name="UPDATE_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
+
+    @JsonIgnoreProperties({"role"})
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    private Set<User> users= new HashSet<>();
 }
