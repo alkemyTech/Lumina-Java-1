@@ -1,6 +1,7 @@
 package com.alkemy.wallet.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,14 +9,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
-
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @ToString
-
 @Entity
 @Table(name = "users")
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
@@ -34,19 +33,20 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "ROLE_ID", nullable = false)
-    private Role role;*/
+    private Role role;
 
     @CreationTimestamp
     @Column(name="CREATION_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
-    LocalDate creationDate;
+    LocalDateTime creationDate;
 
     @UpdateTimestamp
     @Column(name="UPDATE_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
-    LocalDate updateDate;
+    LocalDateTime updateDate;
 
     @Column(name = "SOFT_DELETE")
     private boolean softDelete = Boolean.FALSE;
