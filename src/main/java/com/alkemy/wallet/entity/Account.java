@@ -1,5 +1,6 @@
 package com.alkemy.wallet.entity;
 
+import com.alkemy.wallet.enums.TypeCurrency;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
