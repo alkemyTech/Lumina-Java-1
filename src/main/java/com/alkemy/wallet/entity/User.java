@@ -2,9 +2,7 @@ package com.alkemy.wallet.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
 @Table(name = "users")
