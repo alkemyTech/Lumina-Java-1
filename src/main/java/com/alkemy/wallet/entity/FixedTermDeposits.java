@@ -1,15 +1,16 @@
 package com.alkemy.wallet.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,9 +23,10 @@ public class FixedTermDeposits {
     private Long id;
     @Column(name = "AMOUNT", nullable = false)
     private Double amount;
-    private Long account_id;
-    @ManyToOne
-    @JoinColumn(name = "account_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
     @Column(name = "INTEREST", nullable = false)
     private Double interest;
@@ -35,8 +37,8 @@ public class FixedTermDeposits {
     LocalDateTime creationDate;
 
     @UpdateTimestamp
-    @Column(name="UPDATE_DATE")
+    @Column(name="CLOSING_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
-    LocalDateTime updateDate;
+    LocalDateTime closingDAte;
 
 }
