@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "accounts")
 public class Accounts {
@@ -43,13 +44,7 @@ public class Accounts {
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
 
-   public Accounts(Long id, TypeCurrency currency, Double balance, boolean softDelete, Users userId) {
-        this.id = id;
-        this.currency = currency;
-        this.balance = balance;
-        this.softDelete = softDelete;
-        this.userId = userId;
-    }
+
 
 
 }
