@@ -27,11 +27,11 @@ public class Accounts {
     @Column(name = "TRANSACTIONLIMIT")
     private Double transactionLimit;
 
-  /*  @ManyToOne
+   @ManyToOne
     @JoinColumn(name = "USERID", nullable = false)
     private Users userId;
 
-  */
+
 
     @CreationTimestamp
     @Column(name="CREATION_DATE")
@@ -43,7 +43,7 @@ public class Accounts {
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
 
-   /* public Accounts(Integer id, TypeCurrency currency, Double balance, boolean softDelete, Users userId) {
+   public Accounts(Long id, TypeCurrency currency, Double balance, boolean softDelete, Users userId) {
         this.id = id;
         this.currency = currency;
         this.balance = balance;
@@ -51,5 +51,5 @@ public class Accounts {
         this.userId = userId;
     }
 
-   */
+
 }
