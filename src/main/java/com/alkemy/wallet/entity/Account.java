@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -28,11 +27,11 @@ public class Account {
     @Column(name = "CURRENCY", nullable = false)
     @Enumerated(value=EnumType.STRING)
     private TypeCurrency currency;
-    @Column(name= "BALANCE")
+    @Column(name= "BALANCE", nullable = false)
     private Double balance;
     @Column(name = "SOFT_DELETE")
     private boolean softDelete = Boolean.FALSE;
-    @Column(name = "TRANSACTIONLIMIT")
+    @Column(name = "TRANSACTIONLIMIT", nullable = false)
     private Double transactionLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
