@@ -1,8 +1,8 @@
 package com.alkemy.wallet.repository;
 
-import com.alkemy.wallet.entity.Accounts;
-import org.springframework.data.repository.CrudRepository;
+import com.alkemy.wallet.entity.Account;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccountsRepository extends CrudRepository<Accounts, Long> {
+public interface AccountsRepository extends JpaRepository<Account, Long> {
 
 }

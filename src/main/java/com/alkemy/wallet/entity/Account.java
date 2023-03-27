@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "accounts")
-public class Accounts {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,7 @@ public class Accounts {
    @ManyToOne
     @JoinColumn(name = "USERID", nullable = false)
     private Users userId;
-   /*holas/*
+
 
 
 
