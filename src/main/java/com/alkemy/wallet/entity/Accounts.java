@@ -31,6 +31,7 @@ public class Accounts {
    @ManyToOne
     @JoinColumn(name = "USERID", nullable = false)
     private Users userId;
+   /*holas/*
 
 
 
