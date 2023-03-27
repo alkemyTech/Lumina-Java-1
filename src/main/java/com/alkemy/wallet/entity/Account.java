@@ -28,11 +28,11 @@ public class Account {
     private boolean softDelete = Boolean.FALSE;
     @Column(name = "TRANSACTIONLIMIT")
     private Double transactionLimit;
-    private Long user_id;
+
 
    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "USERID", nullable = false)
+    private User user_id;
 
     @CreationTimestamp
     @Column(name="CREATION_DATE")
@@ -43,8 +43,4 @@ public class Account {
     @Column(name="UPDATE_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
-
-
-
-
 }
