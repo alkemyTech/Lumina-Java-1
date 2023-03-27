@@ -36,7 +36,7 @@ public class FixedTermDeposits {
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime creationDate;
 
-    @UpdateTimestamp
+    
     @Column(name="CLOSING_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime closingDAte;
