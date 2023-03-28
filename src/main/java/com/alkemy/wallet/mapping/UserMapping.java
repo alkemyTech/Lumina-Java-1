@@ -1,30 +1,8 @@
 package com.alkemy.wallet.mapping;
-import java.util.*;
-
 import com.alkemy.wallet.entity.User;
-
 import dto.UserDTO;
-import com.alkemy.wallet.enums.*;
-
 
 public class UserMapping {
-	
-//	public static List<UserDTO> convertListEntityToListDto(List<User> userEntityList){
-//		List<UserDTO> userDTOList = new ArrayList<>();
-//		for (User users : userEntityList) {
-//			UserDTO user = UserMapping.convertEntityToDto(user);
-//			userDTOList.add(User);	
-//		}
-//		return userDTOList;
-//		}
-//	public static List<User> convertListDtosToListEntities(List<UserDTO> userDTOList){
-//	    List<User> userEntityList = new ArrayList<>();
-//        for (UserDTO users : userDTOList) {
-//            User userEntity = UserMapping.convertDtoToEnttity(users);
-//            userEntityList.add(userEntity);
-//        }
-//        return userEntityList;
-//    }
 	
 	public static UserDTO convertEntityToDto(User userEntity){
         return UserDTO.builder()

@@ -1,10 +1,7 @@
 package dto;
 
-
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Role;
@@ -28,6 +25,5 @@ public class UserDTO {
     private LocalDateTime updateDate;
     private boolean softDelete;
     private List<Account> accounts;
-    
-    
+        
 }
