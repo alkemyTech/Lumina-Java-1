@@ -1,40 +1,44 @@
 package com.alkemy.wallet.entity;
 
-import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
-@Table(name = "transactions")
-public class Transaction {
-
+@Table
+public class FixedTermDeposits {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "AMOUNT", nullable = false)
     private Double amount;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE", nullable = false)
-    private TransactionTypeEnum type;
-    @Column(name = "DESCRIPTION")
-    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @JoinColumn(name = "ACCOUNT_ID", nullable = false)
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
+    @Column(name = "INTEREST", nullable = false)
+    private Double interest;
 
-    @Column(name="TRANSACTION_DATE")
+    @CreationTimestamp
+    @Column(name="CREATION_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
-    LocalDateTime transactionDate;
+    LocalDateTime creationDate;
+
+    
+    @Column(name="CLOSING_DATE")
+    @JsonFormat(pattern="yyyy-MM-dd")
+    LocalDateTime closingDAte;
 
 }
