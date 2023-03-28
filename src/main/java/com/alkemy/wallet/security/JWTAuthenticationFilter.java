@@ -28,15 +28,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             authCredential=new ObjectMapper().readValue(request.getReader(), AuthCredential.class);
 
         } catch (IOException e){
-
         }
-        UsernamePasswordAuthenticationToken usernamePAt = new UsernamePasswordAuthenticationToken(
+        UsernamePasswordAuthenticationToken usernamePAT = new UsernamePasswordAuthenticationToken(
                 authCredential.getEmail(),
                 authCredential.getPassword(),
                 Collections.emptyList()
         );
-
-        return getAuthenticationManager().authenticate(usernamePAt);
+        return getAuthenticationManager().authenticate(usernamePAT);
     }
 
     //metodo para efectuar la authenticacion
@@ -47,14 +45,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authResult) throws IOException, ServletException {
         //creo un UserDetailsImpl lo parceo con authResult
         UserDetailsImplements userDetails= (UserDetailsImplements) authResult.getPrincipal();
-
         //creo el token utilizando el usuario y apellido de la clase UserDetailsImplement
         String token= TokenUtils.createToken(userDetails.getName(), userDetails.getUsername());
-
         //envio con un response los datos con un header "authorization" + token
         response.addHeader("Authorization", "Barer"+token);
         response.getWriter().flush();
-
         super.successfulAuthentication(request, response, chain, authResult);
     }
 }
