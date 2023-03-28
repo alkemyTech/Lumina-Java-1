@@ -19,7 +19,7 @@ public class TokenUtils {
         Map<String, Object> extra =new HashMap<>();
         extra.put("nombre", nombre);
                 return Jwts.builder().setSubject(email).setExpiration(expirationDate)
-                        .addClaims(extra).signWith(Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes())).compact()          .getBytes()).compact();
+                        .addClaims(extra).signWith(Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes())).compact();
     }
 
 
