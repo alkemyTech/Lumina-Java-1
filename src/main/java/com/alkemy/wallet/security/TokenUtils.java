@@ -5,12 +5,10 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
-import java.security.KeyStore;
 import java.util.*;
 
 public class TokenUtils {
-    private final static String ACCESS_TOKEN_SECRET="";
+    private final static String ACCESS_TOKEN_SECRET="pepe";
     private final static Long ACCESS_TOKEN_VALIDITY_SECONDS= 2_592_000L;
 
     //Con este metodo creo un TOKEN que sera enviado al Cliente
