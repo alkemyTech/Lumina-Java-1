@@ -4,6 +4,7 @@ import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.mapping.UserMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import dto.UserDTO;
 
@@ -12,7 +13,7 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
-
+    
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

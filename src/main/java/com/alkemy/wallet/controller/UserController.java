@@ -5,6 +5,7 @@ import dto.UserDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import lombok.*;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@Validated
 public class UserController {
 
     @Autowired
@@ -29,7 +31,7 @@ public class UserController {
     }
     
     @PostMapping 
-    public ResponseEntity<UserDTO> generete(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> generete(@Validated @RequestBody UserDTO userDTO){
     	UserDTO userDTOResponse = userService.saveUser(userDTO);
     	return ResponseEntity.ok(userDTOResponse);		
     }

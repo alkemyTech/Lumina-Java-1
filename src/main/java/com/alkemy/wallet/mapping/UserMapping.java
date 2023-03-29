@@ -1,4 +1,7 @@
 package com.alkemy.wallet.mapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.alkemy.wallet.entity.User;
 import dto.UserDTO;
 
@@ -19,12 +22,15 @@ public class UserMapping {
                 .build();
                 }
 	
-	public static User convertDtoToEntity(UserDTO userDTO){
+    @Autowired
+    private static PasswordEncoder passwordEncoder;
+	
+   	public static User convertDtoToEntity(UserDTO userDTO){
 		return User.builder()
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
-                .password(userDTO.getPassword())
+                .password(passwordEncoder.encode(userDTO.getPassword()))
                 .build();
     }
 	}
