@@ -1,5 +1,6 @@
 package com.alkemy.wallet.security;
 
+import com.alkemy.wallet.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,7 +44,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        UserDetailsImplements userDetails= (UserDetailsImplements) authResult.getPrincipal();
+        UserService userDetails= (UserService) authResult.getPrincipal();
         String token= TokenUtils.createToken(userDetails.getName(), userDetails.getUsername());
         response.addHeader("Authorization", "Barer"+token);
         response.getWriter().flush();
