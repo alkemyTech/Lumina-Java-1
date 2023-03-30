@@ -1,5 +1,7 @@
 package com.alkemy.wallet.security;
 
+import com.alkemy.wallet.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 @Configuration
+@AllArgsConstructor
 public class SecurityConfig {
+    private final UserService userService;
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http,
                                     AuthenticationManager authManager) throws Exception {
@@ -31,7 +35,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
+  /*  @Bean
     UserDetailsService userDetailsService(){
         InMemoryUserDetailsManager manager= new InMemoryUserDetailsManager();
         manager.createUser(User.withUsername("admin")
@@ -39,7 +43,7 @@ public class SecurityConfig {
                 .roles()
                 .build());
         return manager;
-    }
+    }*/
 
     @Bean
     PasswordEncoder passwordEncoder(){
@@ -49,7 +53,7 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService())
+                .userDetailsService(userService)
                 .passwordEncoder(passwordEncoder())
                 .and()
                 .build();
