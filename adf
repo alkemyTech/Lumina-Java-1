@@ -1,0 +1,45 @@
+[1mdiff --git a/src/main/java/com/alkemy/wallet/repository/UserRepository.java b/src/main/java/com/alkemy/wallet/repository/UserRepository.java[m
+[1mindex 018ed65..e3893e4 100644[m
+[1m--- a/src/main/java/com/alkemy/wallet/repository/UserRepository.java[m
+[1m+++ b/src/main/java/com/alkemy/wallet/repository/UserRepository.java[m
+[36m@@ -4,7 +4,9 @@[m [mimport com.alkemy.wallet.entity.User;[m
+ import org.springframework.data.jpa.repository.JpaRepository;[m
+ import org.springframework.stereotype.Repository;[m
+ [m
+[32m+[m[32mimport java.util.Optional;[m
+[32m+[m
+ @Repository[m
+ public interface UserRepository extends JpaRepository<User, Long> {[m
+[31m-[m
+[32m+[m[32m    User findOneByEmail(String email);[m
+ }[m
+[1mdiff --git a/src/main/java/com/alkemy/wallet/security/JWTAuthenticationFilter.java b/src/main/java/com/alkemy/wallet/security/JWTAuthenticationFilter.java[m
+[1mindex d584855..0953c47 100644[m
+[1m--- a/src/main/java/com/alkemy/wallet/security/JWTAuthenticationFilter.java[m
+[1m+++ b/src/main/java/com/alkemy/wallet/security/JWTAuthenticationFilter.java[m
+[36m@@ -43,11 +43,8 @@[m [mpublic class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte[m
+                                             HttpServletResponse response,[m
+                                             FilterChain chain,[m
+                                             Authentication authResult) throws IOException, ServletException {[m
+[31m-        //creo un UserDetailsImpl lo parceo con authResult[m
+         UserDetailsImplements userDetails= (UserDetailsImplements) authResult.getPrincipal();[m
+[31m-        //creo el token utilizando el usuario y apellido de la clase UserDetailsImplement[m
+         String token= TokenUtils.createToken(userDetails.getName(), userDetails.getUsername());[m
+[31m-        //envio con un response los datos con un header "authorization" + token[m
+         response.addHeader("Authorization", "Barer"+token);[m
+         response.getWriter().flush();[m
+         super.successfulAuthentication(request, response, chain, authResult);[m
+[1mdiff --git a/src/main/java/com/alkemy/wallet/security/SecurityConfig.java b/src/main/java/com/alkemy/wallet/security/SecurityConfig.java[m
+[1mindex 43d2937..04b23c7 100644[m
+[1m--- a/src/main/java/com/alkemy/wallet/security/SecurityConfig.java[m
+[1m+++ b/src/main/java/com/alkemy/wallet/security/SecurityConfig.java[m
+[36m@@ -12,9 +12,6 @@[m [mimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;[m
+ import org.springframework.security.crypto.password.PasswordEncoder;[m
+ import org.springframework.security.provisioning.InMemoryUserDetailsManager;[m
+ import org.springframework.security.web.SecurityFilterChain;[m
+[31m-[m
+[31m-import java.net.http.HttpClient;[m
+[31m-[m
+ @Configuration[m
+ public class SecurityConfig {[m
+     @Bean[m
