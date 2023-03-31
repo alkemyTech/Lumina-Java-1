@@ -1,14 +1,20 @@
 package com.alkemy.wallet.mapping;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import com.alkemy.wallet.mapping.AccountMapping;
+import com.alkemy.wallet.dto.AccountDTO;
+import com.alkemy.wallet.dto.UserDTO;
 import com.alkemy.wallet.entity.User;
-import dto.UserDTO;
 
 public class UserMapping {
 	
 	public static UserDTO convertEntityToDto(User userEntity){
-        return UserDTO.builder()
+//		AccountMapping accountMapping;
+		List<AccountDTO> listAccountDTO = AccountMapping.convertEntityListToDtoList(userEntity.getAccounts());
+				
+       return UserDTO.builder()
         		.id(userEntity.getId())
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
@@ -18,7 +24,7 @@ public class UserMapping {
                 .updateDate(userEntity.getUpdateDate())
                 .softDelete(userEntity.isSoftDelete())
                 .role(userEntity.getRole())
-                .accounts(null)
+                .accountsDTO(listAccountDTO)
                 .build();
                 }
 	

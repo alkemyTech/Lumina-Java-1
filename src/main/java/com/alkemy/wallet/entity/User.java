@@ -14,8 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Builder
 @Setter
@@ -55,13 +54,14 @@ public class User {
     @Column(name="UPDATE_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
-
+    
+    @Builder.Default
     @Column(name = "SOFT_DELETE")
     private boolean softDelete = Boolean.FALSE;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Account> accounts = new HashSet<>();
+    private List<Account> accounts;
 
     @Bean
     public PasswordEncoder encoder() {

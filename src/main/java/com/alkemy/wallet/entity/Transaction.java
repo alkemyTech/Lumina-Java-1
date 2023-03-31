@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "transactions")
+@Builder
 public class Transaction {
 
     @Id

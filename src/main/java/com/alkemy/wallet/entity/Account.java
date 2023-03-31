@@ -2,6 +2,7 @@ package com.alkemy.wallet.entity;
 
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,7 +11,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+@Builder
 @Getter
 @Setter
 @ToString
@@ -48,4 +52,12 @@ public class Account {
     @Column(name="UPDATE_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private Set<Transaction> transactions= new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private Set<FixedTermDeposits> fixedTermDeposits = new HashSet<>();
 }

@@ -1,7 +1,7 @@
 package com.alkemy.wallet.controller;
 
+import com.alkemy.wallet.dto.UserDTO;
 import com.alkemy.wallet.service.UserService;
-import dto.UserDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
