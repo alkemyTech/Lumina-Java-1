@@ -8,27 +8,28 @@ import com.alkemy.wallet.mapping.UserMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class UserService{
 
     @Autowired
     UserRepository userRepository;
-    
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    
+
     public UserDTO saveUser(UserDTO userDTO){
-    	
+
         User userEntity = UserMapping.convertDtoToEntity(userDTO);
         setAccountToUser(userEntity);
-        User userEntityDos = userRepository.save(userEntity); 
+        User userEntityDos = userRepository.save(userEntity);
         UserDTO userDTOResult = UserMapping.convertEntityToDto(userEntityDos);
 
         return userDTOResult;
     }
-    
+
     private void setAccountToUser(User user) {
         Account USDAcount = new Account();
         Account ARSAcount = new Account();
@@ -49,4 +50,23 @@ public class UserService{
         USDAcount.setUser(user);
     }
 
+    public UserDTO update(Long id,UserDTO entity) throws Exception{
+        try {
+            Optional<User> optionalUser = userRepository.findById(id);
+            User user = optionalUser.get();
+
+            User userEntity = UserMapping.convertDtoToEntity(entity);
+            setAccountToUser(userEntity);
+            User userEntityDos = userRepository.save(userEntity);
+            UserDTO userDTOResult = UserMapping.convertEntityToDto(userEntityDos);
+
+            user.setFirstName(userDTOResult.getFirstName());
+            user.setLastName(userDTOResult.getLastName());
+            user.setCreationDate(userDTOResult.getCreationDate());
+            user.setUpdateDate(userDTOResult.getUpdateDate());
+            return userDTOResult;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 }
