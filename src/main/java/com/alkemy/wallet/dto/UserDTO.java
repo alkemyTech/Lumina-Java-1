@@ -15,15 +15,15 @@ import javax.validation.constraints.Pattern;
 public class UserDTO {
  
     private Long id;
-    @NotNull(message = "el campo firstName no puede ser nulo")
-    @Pattern(regexp = "[a-zA-Z ]{2,64}", message = "Debe contener solo letras ni estar vacio.")
+    @NotNull(message = "El campo firstName no puede ser nulo")
+    @Pattern(regexp = "[a-zA-Z ]{2,64}", message = "Debe contener solo letras y no puede estar vacio.")
     private String firstName;
-    @NotNull(message = "el campo firstName no puede ser nulo")
-    @Pattern(regexp = "[a-zA-Z ]{2,64}", message = "Debe contener solo letras ni estar vacio.")
+    @NotNull(message = "El campo firstName no puede ser nulo")
+    @Pattern(regexp = "[a-zA-Z ]{2,64}", message = "Debe contener solo letras y no puede estar vacio.")
     private String lastName; 
-    @Pattern(regexp = "^\\\\w+[\\\\.\\\\w]*@[\\\\w]+([\\\\.\\\\w]+)+$", message = "Ingrese un mail valido")
+    @Pattern(regexp = "^\\\\w+[\\\\.\\\\w]*@[\\\\w]+([\\\\.\\\\w]+)+$", message = "Ingrese un email valido")
     private String email;
-    @NotNull(message = "el campo password no puede ser nulo")
+    @NotNull(message = "El campo password no puede ser nulo")
     @Pattern(regexp = "^(?=.[a-z])(?=.[A-Z])(?=.\\d)(?=.[@#$%^&+=!])(?=.*[^\\s]).{8,20}$",
             message = "La contraseña debe tener: \n" +
                     " -al menos una letra mayúscula.\n" +
