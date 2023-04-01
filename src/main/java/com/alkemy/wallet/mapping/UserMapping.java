@@ -1,6 +1,6 @@
 package com.alkemy.wallet.mapping;
-import java.util.List;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.alkemy.wallet.dto.AccountDTO;

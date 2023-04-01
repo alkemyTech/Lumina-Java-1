@@ -39,10 +39,9 @@ public class AccountMapping {
 
 	    public static List<Account> convertDTOListToEntityList(List<AccountDTO> accountsDTO){
 	    	List<Account> accountList = accountsDTO.stream().map(a->convertDtoToEntity(a)).collect(Collectors.toList());
-//	    	List<Account> accountList = accountsDTO.stream().map(a->convertDtoToEntity(a)).collect(Collectors.toList());
 	        
 	        return accountList;
 	    }
-	}
+}
 
 
