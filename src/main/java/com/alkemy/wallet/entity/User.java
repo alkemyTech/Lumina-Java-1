@@ -8,11 +8,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor
@@ -50,7 +54,8 @@ public class User {
     @Column(name="UPDATE_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
-
+    
+    @Builder.Default
     @Column(name = "SOFT_DELETE")
     private boolean softDelete = Boolean.FALSE;
 
@@ -59,3 +64,4 @@ public class User {
     private Set<Account> accounts = new HashSet<>();
 
 }
+
