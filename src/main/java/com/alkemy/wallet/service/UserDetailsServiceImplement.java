@@ -1,15 +1,11 @@
 package com.alkemy.wallet.service;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
-
 import javax.transaction.Transactional;
-
 import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.repository.UserRepository;
 
@@ -26,8 +22,4 @@ public class UserDetailsServiceImplement implements UserDetailsService{
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
 
 	}
-	
-	
-	
-
 }

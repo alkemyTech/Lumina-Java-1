@@ -2,7 +2,6 @@ package com.alkemy.wallet.entity;
 
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,20 +10,21 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
-@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 @Table(name = "accounts")
+@SQLDelete(sql = "UPDATE accounts SET SOFT_DELETE = true WHERE id=?")
+@Where(clause = "SOFT_DELETE=false")
 public class Account {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,7 +35,7 @@ public class Account {
     private Double balance;
     @Column(name = "SOFT_DELETE")
     private boolean softDelete = Boolean.FALSE;
-    @Column(name = "TRANSACTIONLIMIT", nullable = false)
+    @Column(name = "TRANSACTION_LIMIT", nullable = false)
     private Double transactionLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,11 +53,11 @@ public class Account {
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
 
-    @JsonIgnore
+    @JsonIgnoreProperties({"account"})
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private Set<Transaction> transactions= new HashSet<>();
+    private List<Transaction> transactions= new ArrayList();
 
-    @JsonIgnore
+    @JsonIgnoreProperties({"account"})
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private Set<FixedTermDeposits> fixedTermDeposits = new HashSet<>();
+    private List<FixedTermDeposits> fixedTermDeposits = new ArrayList<>();
 }

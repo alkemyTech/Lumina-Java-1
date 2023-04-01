@@ -7,16 +7,10 @@ import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.mapping.UserMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService{
-	
-	
 
     @Autowired
     UserRepository userRepository;
@@ -24,7 +18,6 @@ public class UserService{
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    
     
     public UserDTO saveUser(UserDTO userDTO){
     	
@@ -36,16 +29,6 @@ public class UserService{
         return userDTOResult;
     }
     
-//    public ResponseEntity<UserModelResponseDTO> createUser(UserModelRequestDTO userModelRequestDTO) {
-//        UserModel newUser = (UserModelMapping.convertDtoToEntity(userModelRequestDTO));
-//
-//        setAccountToUser(newUser);
-//
-//        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(UserModelMapping.convertEntityToDTO(userModelRepository.save(newUser)));
-//    }
-
     private void setAccountToUser(User user) {
         Account USDAcount = new Account();
         Account ARSAcount = new Account();
@@ -65,10 +48,5 @@ public class UserService{
         ARSAcount.setUser(user);
         USDAcount.setUser(user);
     }
-
-
-	
-    
-    
 
 }
