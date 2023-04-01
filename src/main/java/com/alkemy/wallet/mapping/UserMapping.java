@@ -3,7 +3,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.alkemy.wallet.mapping.AccountMapping;
 import com.alkemy.wallet.dto.AccountDTO;
 import com.alkemy.wallet.dto.UserDTO;
 import com.alkemy.wallet.entity.User;
@@ -11,7 +10,7 @@ import com.alkemy.wallet.entity.User;
 public class UserMapping {
 	
 	public static UserDTO convertEntityToDto(User userEntity){
-//		AccountMapping accountMapping;
+
 		List<AccountDTO> listAccountDTO = AccountMapping.convertEntityListToDtoList(userEntity.getAccounts());
 				
        return UserDTO.builder()
@@ -39,6 +38,6 @@ public class UserMapping {
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .build();
     }
-	}
+}
 
 	

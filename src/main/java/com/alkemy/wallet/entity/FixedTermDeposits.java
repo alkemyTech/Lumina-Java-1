@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -18,6 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table
 public class FixedTermDeposits {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,6 +28,7 @@ public class FixedTermDeposits {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
+
     @Column(name = "INTEREST", nullable = false)
     private Double interest;
 
@@ -36,7 +37,6 @@ public class FixedTermDeposits {
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime creationDate;
 
-    
     @Column(name="CLOSING_DATE")
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime closingDAte;

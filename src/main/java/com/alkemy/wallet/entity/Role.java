@@ -11,8 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +21,7 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,5 +43,5 @@ public class Role {
 
     @JsonIgnoreProperties({"role"})
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private Set<User> users= new HashSet<>();
+    private List<User> users =  new ArrayList();
 }

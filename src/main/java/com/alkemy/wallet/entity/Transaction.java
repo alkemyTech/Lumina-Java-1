@@ -4,10 +4,10 @@ import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor
@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "transactions")
-@Builder
 public class Transaction {
 
     @Id
