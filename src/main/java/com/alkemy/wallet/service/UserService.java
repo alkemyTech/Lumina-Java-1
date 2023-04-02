@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService{
@@ -59,4 +60,23 @@ public class UserService{
         return usersDTO;
     }
 
+    public UserDTO update(Long id,UserDTO entity) throws Exception{
+        try {
+            Optional<User> optionalUser = userRepository.findById(id);
+            User user = optionalUser.get();
+
+            User userEntity = UserMapping.convertDtoToEntity(entity);
+            setAccountToUser(userEntity);
+            User userEntityDos = userRepository.save(userEntity);
+            UserDTO userDTOResult = UserMapping.convertEntityToDto(userEntityDos);
+
+            user.setFirstName(userDTOResult.getFirstName());
+            user.setLastName(userDTOResult.getLastName());
+            user.setCreationDate(userDTOResult.getCreationDate());
+            user.setUpdateDate(userDTOResult.getUpdateDate());
+            return userDTOResult;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 }
