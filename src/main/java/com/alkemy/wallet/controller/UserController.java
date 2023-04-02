@@ -42,7 +42,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userService.update(id, userDTO));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+        } 
     }
 
 }
