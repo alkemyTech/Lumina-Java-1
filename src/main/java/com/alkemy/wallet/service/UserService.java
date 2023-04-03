@@ -7,9 +7,11 @@ import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.mapping.UserMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService{
@@ -58,5 +60,23 @@ public class UserService{
         }
         return usersDTO;
     }
+    public UserDTO updateUser(Long id, UserDTO userDTO) throws ChangeSetPersister.NotFoundException {
+        User userEntity = userRepository.findById(id).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+        User user = UserMapping.convertDtoToEntity(userDTO);
+        userEntity.setFirstName(user.getFirstName());
+        userEntity.setLastName(user.getLastName());
+        userEntity.setPassword(user.getPassword());
+        userEntity.setUpdateDate(user.getUpdateDate());
+        userEntity.setCreationDate(user.getCreationDate());
+        userEntity.setSoftDelete(user.isSoftDelete());
+        userEntity.setAccounts(user.getAccounts());
+        User savedUser = userRepository.save(userEntity);
+        UserDTO userDTOResult = UserMapping.convertEntityToDto(savedUser);
+        return userDTOResult;
+    }
 
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+    }
 }
