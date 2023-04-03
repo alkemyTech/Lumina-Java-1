@@ -65,11 +65,11 @@ public class UserService{
         User user = UserMapping.convertDtoToEntity(userDTO);
         userEntity.setFirstName(user.getFirstName());
         userEntity.setLastName(user.getLastName());
-        //userEntity.setPassword(user.getPassword());
+        userEntity.setPassword(user.getPassword());
         userEntity.setUpdateDate(user.getUpdateDate());
         userEntity.setCreationDate(user.getCreationDate());
         userEntity.setSoftDelete(user.isSoftDelete());
-        //userEntity.setAccounts(user.getAccounts());
+        userEntity.setAccounts(user.getAccounts());
         User savedUser = userRepository.save(userEntity);
         UserDTO userDTOResult = UserMapping.convertEntityToDto(savedUser);
         return userDTOResult;
