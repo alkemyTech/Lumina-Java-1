@@ -38,7 +38,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @JoinColumn(name = "ROLE_ID", nullable = false)
+    @JoinColumn(name = "ROLE_ID")
     private Role role;
 
     @CreationTimestamp
@@ -55,7 +55,8 @@ public class User {
     private boolean softDelete = Boolean.FALSE;
 
     @JsonIgnoreProperties({"user"})
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Account> accounts = new ArrayList();
 
 }

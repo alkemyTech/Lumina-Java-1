@@ -8,6 +8,7 @@ import com.alkemy.wallet.mapping.UserMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ public class UserService{
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
@@ -27,7 +30,8 @@ public class UserService{
     	
         User userEntity = UserMapping.convertDtoToEntity(userDTO);
         setAccountToUser(userEntity);
-        User userEntityDos = userRepository.save(userEntity); 
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        User userEntityDos = userRepository.save(userEntity);
         UserDTO userDTOResult = UserMapping.convertEntityToDto(userEntityDos);
 
         return userDTOResult;
