@@ -1,6 +1,7 @@
 package com.alkemy.wallet.controller;
 
 import com.alkemy.wallet.dto.UserDTO;
+import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import lombok.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -46,5 +48,17 @@ public class UserController {
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
+
+    @GetMapping("/{id}")
+    ResponseEntity<Optional<User>>getUser(@PathVariable Long id) throws Exception {
+        Optional<User> optionalUser= userService.getUser(id);
+        return ResponseEntity.ok(optionalUser);
+    }
+
+
+
+
+
+
 
 }

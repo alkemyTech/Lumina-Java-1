@@ -11,6 +11,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -18,21 +19,21 @@ public class UserService{
 
     @Autowired
     UserRepository userRepository;
-    
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    
+
     public UserDTO saveUser(UserDTO userDTO){
-    	
+
         User userEntity = UserMapping.convertDtoToEntity(userDTO);
         setAccountToUser(userEntity);
-        User userEntityDos = userRepository.save(userEntity); 
+        User userEntityDos = userRepository.save(userEntity);
         UserDTO userDTOResult = UserMapping.convertEntityToDto(userEntityDos);
 
         return userDTOResult;
     }
-    
+
     private void setAccountToUser(User user) {
         Account USDAcount = new Account();
         Account ARSAcount = new Account();
@@ -79,4 +80,20 @@ public class UserService{
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
+
+
+    public Optional<User> getUser(Long id) throws Exception {
+        try {
+            Optional<User> user = userRepository.findById(id);
+            if (user.isPresent() && user.get().getId().equals(id)) {
+                return user;
+            } else {
+                throw new Exception("usuario " +id+" no encontrado");
+            }
+        } catch (Exception e) {
+            throw new Exception("usuario " +id+" no encontrado");
+        }
+    }
+
+
 }
