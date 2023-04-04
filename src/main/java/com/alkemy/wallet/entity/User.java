@@ -1,6 +1,7 @@
 package com.alkemy.wallet.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -54,7 +55,7 @@ public class User {
     @Column(name = "SOFT_DELETE")
     private boolean softDelete = Boolean.FALSE;
 
-    @JsonIgnoreProperties({"user"})
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Account> accounts = new ArrayList();

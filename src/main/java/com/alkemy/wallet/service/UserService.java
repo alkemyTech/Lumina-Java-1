@@ -44,8 +44,6 @@ public class UserService{
         USDAcount.setCurrency(TypeCurrency.USD);
         ARSAcount.setCurrency(TypeCurrency.ARS);
 
-        user.getAccounts().add(USDAcount);
-        user.getAccounts().add(ARSAcount);
 
         USDAcount.setBalance(0d);
         ARSAcount.setBalance(0d);
@@ -55,6 +53,9 @@ public class UserService{
 
         ARSAcount.setUser(user);
         USDAcount.setUser(user);
+
+        user.getAccounts().add(USDAcount);
+        user.getAccounts().add(ARSAcount);
     }
 
     public List<UserDTO> getAllUsers() {
