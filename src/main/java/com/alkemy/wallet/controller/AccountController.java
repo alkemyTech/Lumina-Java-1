@@ -1,5 +1,6 @@
 package com.alkemy.wallet.controller;
 
+import com.alkemy.wallet.dto.AccountDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,12 @@ import java.util.List;
 public class AccountController {
 
         @Autowired
-        AccountService userService;
+        AccountService accountService;
 
 
         @GetMapping("/{id}")
-        ResponseEntity<List<Account>> accountList(@PathVariable Long id){
-            List<Account> accounts =userService.accountList(id);
+        ResponseEntity<List<AccountDTO>> accountList(@PathVariable Long id){
+            List<AccountDTO> accounts =accountService.accountList(id);
             return ResponseEntity.ok(accounts);
         }
 
