@@ -6,6 +6,9 @@ import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.mapping.AccountMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,8 +20,12 @@ import java.util.Optional;
 public class AccountService {
         @Autowired
         private UserRepository userRepository;
-
-    public List<AccountDTO> accountList(Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<AccountDTO> accountList(Long id)throws Exception {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        if(authentication==null || !authentication.isAuthenticated()){
+            throw new Exception("no estas autenticado");
+        }
         Optional<User> user = userRepository.findById(id);
         try {
             List<Account> accounts = user.get().getAccounts();

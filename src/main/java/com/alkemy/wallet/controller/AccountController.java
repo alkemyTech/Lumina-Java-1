@@ -19,7 +19,7 @@ public class AccountController {
 
 
         @GetMapping("/{id}")
-        ResponseEntity<List<AccountDTO>> accountList(@PathVariable Long id){
+        ResponseEntity<List<AccountDTO>> accountList(@PathVariable Long id) throws Exception {
             List<AccountDTO> accounts =accountService.accountList(id);
             return ResponseEntity.ok(accounts);
         }
