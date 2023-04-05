@@ -50,9 +50,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Optional<User>>getUser(@PathVariable Long id) throws Exception {
-        Optional<User> optionalUser= userService.getUser(id);
-        return ResponseEntity.ok(optionalUser);
+    ResponseEntity<UserDTO>getUser(@PathVariable Long id) throws Exception {
+        UserDTO User= userService.getUser(id);
+        return ResponseEntity.ok(User);
     }
 
 

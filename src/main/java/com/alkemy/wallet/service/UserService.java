@@ -87,16 +87,18 @@ public class UserService{
     }
 
 
-    public Optional<User> getUser(Long id) throws Exception {
+    public UserDTO getUser(Long id) throws Exception {
         try {
-            Optional<User> user = userRepository.findById(id);
-            if (user.isPresent() && user.get().getId().equals(id)) {
-                return user;
+            Optional<User> userOptional = userRepository.findById(id);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                UserDTO userDTO = UserMapping.convertEntityToDto(user);
+                return userDTO;
             } else {
-                throw new Exception("usuario " +id+" no encontrado");
+                throw new Exception("Usuario " + id + " no encontrado");
             }
         } catch (Exception e) {
-            throw new Exception("usuario " +id+" no encontrado");
+            throw new Exception("Usuario " + id + " no encontrado");
         }
     }
 
