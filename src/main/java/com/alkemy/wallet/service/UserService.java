@@ -8,6 +8,9 @@ import com.alkemy.wallet.mapping.UserMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -21,12 +24,13 @@ public class UserService{
     @Autowired
     private PasswordEncoder passwordEncoder;
     
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    
+
     public UserDTO saveUser(UserDTO userDTO){
-    	
+
         User userEntity = UserMapping.convertDtoToEntity(userDTO);
         setAccountToUser(userEntity);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
@@ -35,7 +39,7 @@ public class UserService{
 
         return userDTOResult;
     }
-    
+
     private void setAccountToUser(User user) {
         Account USDAcount = new Account();
         Account ARSAcount = new Account();
@@ -83,4 +87,28 @@ public class UserService{
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
+
+
+    @PreAuthorize("hasRole('USER')")
+    public UserDTO getUser(Long id) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new Exception("Usuario no autenticado");
+        }
+        String username = authentication.getName();
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (!user.getEmail().equals(username)) {
+                throw new Exception("El usuario autenticado no tiene acceso a este recurso");
+            }
+            UserDTO userDTO = UserMapping.convertEntityToDto(user);
+            return userDTO;
+        } else {
+            throw new Exception("Usuario " + id + " no encontrado");
+        }
+    }
+
+
 }
