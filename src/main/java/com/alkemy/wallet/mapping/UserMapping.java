@@ -3,7 +3,6 @@ package com.alkemy.wallet.mapping;
 import com.alkemy.wallet.dto.AccountDTO;
 import com.alkemy.wallet.dto.RoleDTO;
 import com.alkemy.wallet.dto.UserDTO;
-import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Role;
 import com.alkemy.wallet.entity.User;
 
