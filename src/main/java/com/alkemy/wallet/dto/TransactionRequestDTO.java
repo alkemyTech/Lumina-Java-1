@@ -13,4 +13,5 @@ public class TransactionRequestDTO {
     private Double amount;
     private TransactionTypeEnum type;
     private String description;
+    private AccountDTO account;
 }
