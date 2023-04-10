@@ -20,7 +20,7 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @PostMapping()
+    @PostMapping("/auth/register")
     public ResponseEntity<Role> saveRole(@RequestBody Role role) {
         return ResponseEntity.ok(roleService.saveRole(role));
     }

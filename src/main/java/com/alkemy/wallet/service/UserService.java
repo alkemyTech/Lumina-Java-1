@@ -1,6 +1,7 @@
 package com.alkemy.wallet.service;
 
 import com.alkemy.wallet.entity.User;
+import com.alkemy.wallet.service.RoleService;
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.alkemy.wallet.dto.UserDTO;
 import com.alkemy.wallet.entity.Account;
@@ -8,6 +9,8 @@ import com.alkemy.wallet.mapping.UserMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +26,8 @@ public class UserService{
     @Autowired
     UserRepository userRepository;
     @Autowired
+    RoleService roleService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     
 
@@ -30,15 +35,14 @@ public class UserService{
         userRepository.deleteById(id);
     }
 
-    public UserDTO saveUser(UserDTO userDTO){
+    public ResponseEntity<UserDTO> saveUser(UserDTO userDTO){
 
         User userEntity = UserMapping.convertDtoToEntity(userDTO);
         setAccountToUser(userEntity);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        User userEntityDos = userRepository.save(userEntity);
-        UserDTO userDTOResult = UserMapping.convertEntityToDto(userEntityDos);
+        userEntity.setRole(roleService.getRoleByName(userDTO.getRole()));
 
-        return userDTOResult;
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapping.convertEntityToDto(userRepository.save(userEntity)));
     }
 
     private void setAccountToUser(User user) {

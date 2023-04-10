@@ -19,6 +19,6 @@ public class UserDTO {
     private String email;
     @NotNull(message = "El campo password no puede ser nulo")
     private String password;
-    private RoleDTO role;
+    private String role;
     private List<AccountDTO> accountsDTO;
 }

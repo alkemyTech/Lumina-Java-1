@@ -3,13 +3,16 @@ package com.alkemy.wallet.service;
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
+import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.alkemy.wallet.mapping.TransactionMapping;
 import com.alkemy.wallet.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,9 @@ public class TransactionService {
     TransactionRepository transactionRepository;
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    UserService userService;
 
     public void updateTransaction(Long id, TransactionDTO transactionRequestDTO) throws ChangeSetPersister.NotFoundException {
         Transaction transaction = transactionRepository.findById(id).get();
@@ -37,24 +43,58 @@ public class TransactionService {
         return send(transactionRequestDTO,idSender, currency);
     }
 
-    private List<TransactionDTO> send(TransactionDTO transactionRequestDTO, Long idSender, String currency) throws Exception {
-        Account accountSender = accountService.findById(idSender);
-        Account accountReceiver = accountService.findById(transactionRequestDTO.getAccount().getId());
-
-        return generateTransaction(accountSender,accountReceiver,transactionRequestDTO);
+    public List<TransactionDTO> sendArs(TransactionDTO transactionRequestDTO, Long idSender) throws Exception {
+        String currency = TypeCurrency.ARS.name();
+        return send(transactionRequestDTO,idSender, currency);
     }
 
-    private List<TransactionDTO> generateTransaction(Account accountSender, Account accountReceiver, TransactionDTO transactionRequestDTO) throws Exception {
+    public List<TransactionDTO> send(TransactionDTO transactionDTO, Long senderUserId,String currency) throws Exception {
+        Long receiverUserId = transactionDTO.getAccountId();
 
-        //Acreditar account receiver
-        accountService.pay(accountReceiver,transactionRequestDTO.getAmount());
-        //Descontar a account sender
-        accountService.discount(accountSender,transactionRequestDTO.getAmount());
+    //    User userSender = userService.getUserById(senderUserId);
+     //   User userReceiver = userService.getUserById(receiverUserId);
 
-        //Generar la transaccion para sender
-        Transaction transactionSender=generateTransactionSender(accountSender,accountReceiver,transactionRequestDTO);
-        //Generar la transaccion para receiver
-        Transaction transactionReceiver=generateTransactionReceiver(accountSender,accountReceiver,transactionRequestDTO);
+        existsUser(senderUserId);
+        existsUser(receiverUserId);
+        equalUsers(senderUserId, receiverUserId);
+
+        Account receiverAccount = accountService.findById(transactionDTO.getAccountId());
+
+        Account senderAccount = accountService.getAccountsOfUser(senderUserId)
+                .stream()
+                .filter(account -> account.getCurrency().name().equals(currency))
+                .findAny()
+                .get();
+
+
+
+        return generateTransaction(senderAccount, receiverAccount, transactionDTO);
+    }
+
+
+    private void equalUsers(Long senderUserId, Long receiverUserId) throws Exception {
+        if(senderUserId == receiverUserId){
+            throw new Exception("TRANSACCION INVALIDA");
+        }
+    }
+
+    public void existsUser(Long userSenderId) throws Exception {
+
+        Long user = userService.getUserById(userSenderId).getId();
+        if  (user == null){
+            throw new Exception("USUAIRO INEXISTENTE");
+        }
+    }
+
+    private List<TransactionDTO> generateTransaction(Account accountSender, Account accountReceiver, TransactionDTO transactionDTO) throws Exception {
+
+        validateAmount(accountSender, transactionDTO);
+
+        accountService.pay(accountReceiver,transactionDTO.getAmount());
+        accountService.discount(accountSender,transactionDTO.getAmount());
+
+        Transaction transactionSender=generateTransactionSender(accountSender,accountReceiver,transactionDTO);
+        Transaction transactionReceiver=generateTransactionReceiver(accountSender,accountReceiver,transactionDTO);
 
         accountService.addTransaction(accountSender.getId(),transactionSender);
         accountService.addTransaction(accountReceiver.getId(),transactionReceiver);
@@ -66,10 +106,19 @@ public class TransactionService {
         return TransactionMapping.convertTransactionEntityListToDtoList(transactions);
     }
 
-    private Transaction generateTransactionReceiver(Account accountSender, Account accountReceiver, TransactionDTO transactionRequestDTO) {
+    private void validateAmount(Account senderAccount, TransactionDTO transactionDTO) throws Exception {
+        if(senderAccount.getBalance() < transactionDTO.getAmount()){
+            throw new Exception("SALDO INSUFICIENTE");
+        }
+        if(senderAccount.getTransactionLimit() < transactionDTO.getAmount()){
+            throw new Exception("LIMITE DE TRANSACCION EXCEDIDO");
+        }
+    }
+
+    private Transaction generateTransactionReceiver(Account accountSender, Account accountReceiver, TransactionDTO transactionDTO) {
         StringBuilder descriptionTransactionReceiver= new StringBuilder();
         descriptionTransactionReceiver.append("ACREDITACION DE ")
-                .append(transactionRequestDTO.getAmount())
+                .append(transactionDTO.getAmount())
                 .append("A LA CUENTA ")
                 .append(accountReceiver.getUser().getFirstName())
                 .append(accountReceiver.getUser().getLastName())

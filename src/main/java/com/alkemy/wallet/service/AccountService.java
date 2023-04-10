@@ -34,6 +34,11 @@ public class AccountService {
         return accountRepository.getById(idSender);
     }
 
+
+    public List<Account> getAccountsOfUser(Long userId) {
+       return  accountRepository.accountsOfUser(userId);
+    }
+
     public void pay(Account accountReceiver, double amount) throws Exception {
         transactionValidation(amount,accountReceiver);
         accountReceiver.setBalance(accountReceiver.getBalance()+amount);
