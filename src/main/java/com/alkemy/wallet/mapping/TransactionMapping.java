@@ -1,22 +1,18 @@
 package com.alkemy.wallet.mapping;
 
 import com.alkemy.wallet.dto.AccountDTO;
-import com.alkemy.wallet.dto.TransactionRequestDTO;
+import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
-import com.alkemy.wallet.enums.TransactionTypeEnum;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TransactionMapping {
 
-    public static TransactionRequestDTO convertTransactionEntityToDto(Transaction transaction){
+    public static TransactionDTO convertTransactionEntityToDto(Transaction transaction){
         AccountDTO accountDTO = AccountMapping.convertAccountEntityToDto(transaction.getAccount());
-        return TransactionRequestDTO.builder()
+        return TransactionDTO.builder()
                 .id(transaction.getId())
                 .amount(transaction.getAmount())
                 .type(transaction.getType())
@@ -25,7 +21,7 @@ public class TransactionMapping {
                 .build();
     }
 
-    public static Transaction convertTransactionDtoToEntity(TransactionRequestDTO transactionRequestDTO){
+    public static Transaction convertTransactionDtoToEntity(TransactionDTO transactionRequestDTO){
         Account account = AccountMapping.convertAccountDtoToEntity(transactionRequestDTO.getAccount());
         return Transaction.builder()
                 .id(transactionRequestDTO.getId())
@@ -36,13 +32,13 @@ public class TransactionMapping {
                 .build();
     }
 
-    public static List<TransactionRequestDTO> convertTransactionEntityListToDtoList(List<Transaction> transactions){
+    public static List<TransactionDTO> convertTransactionEntityListToDtoList(List<Transaction> transactions){
 
-        List<TransactionRequestDTO> transactionRequestDTOS = transactions.stream().map(a->convertTransactionEntityToDto(a)).collect(Collectors.toList());
+        List<TransactionDTO> transactionRequestDTOS = transactions.stream().map(a->convertTransactionEntityToDto(a)).collect(Collectors.toList());
         return transactionRequestDTOS;
     }
 
-    public static List<Transaction> convertTransactionDTOListToEntityList(List<TransactionRequestDTO> transactionRequestDTOS){
+    public static List<Transaction> convertTransactionDTOListToEntityList(List<TransactionDTO> transactionRequestDTOS){
         List<Transaction> transactions = transactionRequestDTOS.stream().map(a->convertTransactionDtoToEntity(a)).collect(Collectors.toList());
 
         return transactions;

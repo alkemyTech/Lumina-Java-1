@@ -1,6 +1,6 @@
 package com.alkemy.wallet.service;
 
-import com.alkemy.wallet.dto.TransactionRequestDTO;
+import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
@@ -9,9 +9,7 @@ import com.alkemy.wallet.mapping.TransactionMapping;
 import com.alkemy.wallet.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class TransactionService {
     @Autowired
     AccountService accountService;
 
-    public void updateTransaction(Long id, TransactionRequestDTO transactionRequestDTO) throws ChangeSetPersister.NotFoundException {
+    public void updateTransaction(Long id, TransactionDTO transactionRequestDTO) throws ChangeSetPersister.NotFoundException {
         Transaction transaction = transactionRepository.findById(id).get();
         if (transaction != null){
             transaction.setDescription(transactionRequestDTO.getDescription());
@@ -34,19 +32,19 @@ public class TransactionService {
         }
     }
 
-    public List<TransactionRequestDTO> sendUsd(TransactionRequestDTO transactionRequestDTO, Long idSender) throws Exception {
+    public List<TransactionDTO> sendUsd(TransactionDTO transactionRequestDTO, Long idSender) throws Exception {
         String currency = TypeCurrency.USD.name();
         return send(transactionRequestDTO,idSender, currency);
     }
 
-    private List<TransactionRequestDTO> send(TransactionRequestDTO transactionRequestDTO, Long idSender, String currency) throws Exception {
+    private List<TransactionDTO> send(TransactionDTO transactionRequestDTO, Long idSender, String currency) throws Exception {
         Account accountSender = accountService.findById(idSender);
         Account accountReceiver = accountService.findById(transactionRequestDTO.getAccount().getId());
 
         return generateTransaction(accountSender,accountReceiver,transactionRequestDTO);
     }
 
-    private List<TransactionRequestDTO> generateTransaction(Account accountSender, Account accountReceiver, TransactionRequestDTO transactionRequestDTO) throws Exception {
+    private List<TransactionDTO> generateTransaction(Account accountSender, Account accountReceiver, TransactionDTO transactionRequestDTO) throws Exception {
 
         //Acreditar account receiver
         accountService.pay(accountReceiver,transactionRequestDTO.getAmount());
@@ -68,7 +66,7 @@ public class TransactionService {
         return TransactionMapping.convertTransactionEntityListToDtoList(transactions);
     }
 
-    private Transaction generateTransactionReceiver(Account accountSender, Account accountReceiver, TransactionRequestDTO transactionRequestDTO) {
+    private Transaction generateTransactionReceiver(Account accountSender, Account accountReceiver, TransactionDTO transactionRequestDTO) {
         StringBuilder descriptionTransactionReceiver= new StringBuilder();
         descriptionTransactionReceiver.append("ACREDITACION DE ")
                 .append(transactionRequestDTO.getAmount())
@@ -91,7 +89,7 @@ public class TransactionService {
         return transactionReceiver;
     }
 
-    private Transaction generateTransactionSender(Account accountSender, Account accountReceiver, TransactionRequestDTO transactionRequestDTO) {
+    private Transaction generateTransactionSender(Account accountSender, Account accountReceiver, TransactionDTO transactionRequestDTO) {
         StringBuilder descriptionTransactionReceiver= new StringBuilder();
         descriptionTransactionReceiver.append("DESCUENTO DE ")
                 .append(transactionRequestDTO.getAmount())

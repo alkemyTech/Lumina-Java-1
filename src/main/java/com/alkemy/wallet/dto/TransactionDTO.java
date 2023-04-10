@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class TransactionRequestDTO {
+public class TransactionDTO {
     private Long id;
     private Double amount;
     private TransactionTypeEnum type;
