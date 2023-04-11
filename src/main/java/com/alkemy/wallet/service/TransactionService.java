@@ -1,5 +1,6 @@
 package com.alkemy.wallet.service;
 
+import com.alkemy.wallet.dto.AccountDTO;
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
@@ -49,14 +50,15 @@ public class TransactionService {
     }
 
     public List<TransactionDTO> send(TransactionDTO transactionDTO, Long senderUserId,String currency) throws Exception {
-        Long receiverUserId = transactionDTO.getAccountId();
+        Long reciverAccountId = transactionDTO.getAccountId();
+        Long reciverUserId = accountService.findById(reciverAccountId).getUser().getId();
 
     //    User userSender = userService.getUserById(senderUserId);
      //   User userReceiver = userService.getUserById(receiverUserId);
 
         existsUser(senderUserId);
-        existsUser(receiverUserId);
-        equalUsers(senderUserId, receiverUserId);
+        existsUser(reciverUserId);
+        equalUsers(senderUserId, reciverUserId);
 
         Account receiverAccount = accountService.findById(transactionDTO.getAccountId());
 

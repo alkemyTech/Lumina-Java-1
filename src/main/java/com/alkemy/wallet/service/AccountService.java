@@ -9,6 +9,7 @@ import com.alkemy.wallet.mapping.AccountMapping;
 import com.alkemy.wallet.repository.AccountRepository;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,11 +41,11 @@ public class AccountService {
     }
 
     public void pay(Account accountReceiver, double amount) throws Exception {
-        transactionValidation(amount,accountReceiver);
+        //transactionValidation(amount,accountReceiver);
         accountReceiver.setBalance(accountReceiver.getBalance()+amount);
         accountRepository.save(accountReceiver);
     }
-
+    /*
     private void transactionValidation(double amount, Account accountReceiver) throws Exception {
         if(accountReceiver.getBalance()<amount){
             throw new Exception("DINERO INSUFICIENTE");
@@ -52,7 +53,7 @@ public class AccountService {
         if (accountReceiver.getTransactionLimit()<amount){
             throw  new Exception("LIMITE DE TRANSFERENCIA EXCEDIDO");
         }
-    }
+    }*/
 
     public void discount(Account accountSender, Double amount) {
         accountSender.setBalance(accountSender.getBalance()-amount);
@@ -123,5 +124,6 @@ public class AccountService {
 
         return accountDTOResult;
     }
+
 }
 
