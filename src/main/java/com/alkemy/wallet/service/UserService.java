@@ -8,6 +8,10 @@ import com.alkemy.wallet.mapping.UserMapping;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +22,25 @@ public class UserService{
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    
+
     public UserDTO saveUser(UserDTO userDTO){
-    	
+
         User userEntity = UserMapping.convertDtoToEntity(userDTO);
         setAccountToUser(userEntity);
-        User userEntityDos = userRepository.save(userEntity); 
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        User userEntityDos = userRepository.save(userEntity);
         UserDTO userDTOResult = UserMapping.convertEntityToDto(userEntityDos);
 
         return userDTOResult;
     }
-    
+
     private void setAccountToUser(User user) {
         Account USDAcount = new Account();
         Account ARSAcount = new Account();
@@ -40,8 +48,6 @@ public class UserService{
         USDAcount.setCurrency(TypeCurrency.USD);
         ARSAcount.setCurrency(TypeCurrency.ARS);
 
-        user.getAccounts().add(USDAcount);
-        user.getAccounts().add(ARSAcount);
 
         USDAcount.setBalance(0d);
         ARSAcount.setBalance(0d);
@@ -51,6 +57,9 @@ public class UserService{
 
         ARSAcount.setUser(user);
         USDAcount.setUser(user);
+
+        user.getAccounts().add(USDAcount);
+        user.getAccounts().add(ARSAcount);
     }
 
     public List<UserDTO> getAllUsers() {
@@ -79,4 +88,32 @@ public class UserService{
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
+
+
+    @PreAuthorize("hasRole('USER')")
+    public UserDTO getUser(Long id) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new Exception("Usuario no autenticado");
+        }
+        String username = authentication.getName();
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (!user.getEmail().equals(username)) {
+                throw new Exception("El usuario autenticado no tiene acceso a este recurso");
+            }
+            UserDTO userDTO = UserMapping.convertEntityToDto(user);
+            return userDTO;
+        } else {
+            throw new Exception("Usuario " + id + " no encontrado");
+        }
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).get();
+    }
+
+
 }
