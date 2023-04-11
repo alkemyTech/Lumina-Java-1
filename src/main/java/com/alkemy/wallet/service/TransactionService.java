@@ -125,7 +125,8 @@ public class TransactionService {
         transaction.setAmount(transactionRequestDTO.getAmount());
         transaction.setType(transactionRequestDTO.getType());
         transaction.setDescription(transactionRequestDTO.getDescription());
-        transaction.setAccount(transaction.getAccount());
+        Account account = accountService.findById(transactionRequestDTO.getId());
+        transaction.setAccount(account);
 
         transactionRepository.save(transaction);
 
