@@ -1,19 +1,14 @@
 package com.alkemy.wallet.service;
 
-import com.alkemy.wallet.dto.AccountDTO;
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
-import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.alkemy.wallet.mapping.TransactionMapping;
-import com.alkemy.wallet.repository.AccountRepository;
 import com.alkemy.wallet.repository.TransactionRepository;
-import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -54,9 +49,6 @@ public class TransactionService {
     public List<TransactionDTO> send(TransactionDTO transactionDTO, Long senderUserId,String currency) throws Exception {
         Long reciverAccountId = transactionDTO.getAccountId();
         Long reciverUserId = accountService.findById(reciverAccountId).getUser().getId();
-
-    //    User userSender = userService.getUserById(senderUserId);
-     //   User userReceiver = userService.getUserById(receiverUserId);
 
         existsUser(senderUserId);
         existsUser(reciverUserId);
@@ -148,9 +140,11 @@ public class TransactionService {
                 .append(transactionRequestDTO.getAmount())
                 .append(" A LA CUENTA ")
                 .append(accountSender.getUser().getFirstName())
+                .append(" ")
                 .append(accountSender.getUser().getLastName())
                 .append(" POR ACREDITACION A LA CUENTA ")
                 .append(accountReceiver.getUser().getFirstName())
+                .append(" ")
                 .append(accountReceiver.getUser().getLastName())
                 .append(" EL DIA ")
                 .append(LocalDate.now());
