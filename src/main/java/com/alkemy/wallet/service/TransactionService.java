@@ -1,5 +1,6 @@
 package com.alkemy.wallet.service;
 
+import com.alkemy.wallet.dto.AccountDTO;
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
@@ -51,14 +52,15 @@ public class TransactionService {
     }
 
     public List<TransactionDTO> send(TransactionDTO transactionDTO, Long senderUserId,String currency) throws Exception {
-        Long receiverUserId = transactionDTO.getAccountId();
+        Long reciverAccountId = transactionDTO.getAccountId();
+        Long reciverUserId = accountService.findById(reciverAccountId).getUser().getId();
 
     //    User userSender = userService.getUserById(senderUserId);
      //   User userReceiver = userService.getUserById(receiverUserId);
 
         existsUser(senderUserId);
-        existsUser(receiverUserId);
-        equalUsers(senderUserId, receiverUserId);
+        existsUser(reciverUserId);
+        equalUsers(senderUserId, reciverUserId);
 
         Account receiverAccount = accountService.findById(transactionDTO.getAccountId());
 
@@ -91,7 +93,6 @@ public class TransactionService {
     private List<TransactionDTO> generateTransaction(Account accountSender, Account accountReceiver, TransactionDTO transactionDTO) throws Exception {
 
         validateAmount(accountSender, transactionDTO);
-
         accountService.pay(accountReceiver,transactionDTO.getAmount());
         accountService.discount(accountSender,transactionDTO.getAmount());
 
@@ -121,16 +122,17 @@ public class TransactionService {
         StringBuilder descriptionTransactionReceiver= new StringBuilder();
         descriptionTransactionReceiver.append("ACREDITACION DE ")
                 .append(transactionDTO.getAmount())
-                .append("A LA CUENTA ")
+                .append(" A LA CUENTA ")
                 .append(accountReceiver.getUser().getFirstName())
                 .append(accountReceiver.getUser().getLastName())
-                .append("POR LA CUENTA ")
+                .append(" POR LA CUENTA ")
                 .append(accountSender.getUser().getFirstName())
                 .append(accountSender.getUser().getLastName())
-                .append("EL DIA ")
+                .append(" EL DIA ")
                 .append(LocalDate.now());
 
         Transaction transactionReceiver = Transaction.builder()
+                .amount(transactionDTO.getAmount())
                 .type(TransactionTypeEnum.INCOME)
                 .description(descriptionTransactionReceiver.toString())
                 .account(accountReceiver)
@@ -142,18 +144,19 @@ public class TransactionService {
 
     private Transaction generateTransactionSender(Account accountSender, Account accountReceiver, TransactionDTO transactionRequestDTO) {
         StringBuilder descriptionTransactionReceiver= new StringBuilder();
-        descriptionTransactionReceiver.append("DESCUENTO DE ")
+        descriptionTransactionReceiver.append(" SE REALIZO UN DESCUENTO DE ")
                 .append(transactionRequestDTO.getAmount())
-                .append("A LA CUENTA ")
+                .append(" A LA CUENTA ")
                 .append(accountSender.getUser().getFirstName())
                 .append(accountSender.getUser().getLastName())
-                .append("POR ACREDITACION A LA CUENTA ")
+                .append(" POR ACREDITACION A LA CUENTA ")
                 .append(accountReceiver.getUser().getFirstName())
                 .append(accountReceiver.getUser().getLastName())
-                .append("EL DIA ")
+                .append(" EL DIA ")
                 .append(LocalDate.now());
 
         Transaction transactionSender = Transaction.builder()
+                .amount(transactionRequestDTO.getAmount())
                 .type(TransactionTypeEnum.PAYMENT)
                 .description(descriptionTransactionReceiver.toString())
                 .account(accountSender)

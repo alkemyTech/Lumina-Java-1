@@ -29,7 +29,7 @@ public class TransactionController {
             return ResponseEntity.ok(transactionService.sendUsd(transactionDTO, idSender));
         }
         catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST USD");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
     @PostMapping("/sendArs/{idSender}")
