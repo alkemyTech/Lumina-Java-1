@@ -1,5 +1,6 @@
 package com.alkemy.wallet.controller;
 
+
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.service.TransactionService;
 import lombok.AllArgsConstructor;
@@ -40,4 +41,13 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST ARS");
         }
     }
+
+
+    @PostMapping("/payment")
+    public ResponseEntity<String>makeAPayment(@RequestBody TransactionDTO transactionDTO )throws Exception{
+        transactionService.newPayment(transactionDTO);
+        return ResponseEntity.ok("transaction create");
+    }
+
+
 }

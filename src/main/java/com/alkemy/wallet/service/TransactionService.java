@@ -8,7 +8,9 @@ import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.alkemy.wallet.mapping.TransactionMapping;
+import com.alkemy.wallet.repository.AccountRepository;
 import com.alkemy.wallet.repository.TransactionRepository;
+import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.RequestEntity;
@@ -18,9 +20,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 public class TransactionService {
-
     @Autowired
     TransactionRepository transactionRepository;
     @Autowired
@@ -164,6 +166,25 @@ public class TransactionService {
         return transactionSender;
     }
 
+    public void newPayment(TransactionDTO transactionRequestDTO) throws IllegalArgumentException {
+
+        if (transactionRequestDTO.getAmount() <= 0 || !transactionRequestDTO.getType().equals("PAYMENT")) {
+            throw new IllegalArgumentException("detalles de la transaccion invalidos");
+        }
+
+        Transaction transaction = new Transaction();
+        transaction.setAmount(transactionRequestDTO.getAmount());
+        transaction.setType(TransactionTypeEnum.PAYMENT);
+        transaction.setDescription(transactionRequestDTO.getDescription());
+        Account account = accountService.findById(transactionRequestDTO.getId());
+        transaction.setAccount(account);
+
+        transactionRepository.save(transaction);
+
+    }
+
+
+
+
 
 }
-
