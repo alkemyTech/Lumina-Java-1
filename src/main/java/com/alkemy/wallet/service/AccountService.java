@@ -41,21 +41,11 @@ public class AccountService {
     }
 
     public void pay(Account accountReceiver, double amount) throws Exception {
-        //transactionValidation(amount,accountReceiver);
         accountReceiver.setBalance(accountReceiver.getBalance()+amount);
         accountRepository.save(accountReceiver);
     }
-    /*
-    private void transactionValidation(double amount, Account accountReceiver) throws Exception {
-        if(accountReceiver.getBalance()<amount){
-            throw new Exception("DINERO INSUFICIENTE");
-        }
-        if (accountReceiver.getTransactionLimit()<amount){
-            throw  new Exception("LIMITE DE TRANSFERENCIA EXCEDIDO");
-        }
-    }*/
 
-    public void discount(Account accountSender, Double amount) {
+    public void discount(Account accountSender, double amount) {
         accountSender.setBalance(accountSender.getBalance()-amount);
         accountRepository.save(accountSender);
     }

@@ -91,7 +91,6 @@ public class TransactionService {
     private List<TransactionDTO> generateTransaction(Account accountSender, Account accountReceiver, TransactionDTO transactionDTO) throws Exception {
 
         validateAmount(accountSender, transactionDTO);
-
         accountService.pay(accountReceiver,transactionDTO.getAmount());
         accountService.discount(accountSender,transactionDTO.getAmount());
 
@@ -121,16 +120,17 @@ public class TransactionService {
         StringBuilder descriptionTransactionReceiver= new StringBuilder();
         descriptionTransactionReceiver.append("ACREDITACION DE ")
                 .append(transactionDTO.getAmount())
-                .append("A LA CUENTA ")
+                .append(" A LA CUENTA ")
                 .append(accountReceiver.getUser().getFirstName())
                 .append(accountReceiver.getUser().getLastName())
-                .append("POR LA CUENTA ")
+                .append(" POR LA CUENTA ")
                 .append(accountSender.getUser().getFirstName())
                 .append(accountSender.getUser().getLastName())
-                .append("EL DIA ")
+                .append(" EL DIA ")
                 .append(LocalDate.now());
 
         Transaction transactionReceiver = Transaction.builder()
+                .amount(transactionDTO.getAmount())
                 .type(TransactionTypeEnum.INCOME)
                 .description(descriptionTransactionReceiver.toString())
                 .account(accountReceiver)
@@ -142,18 +142,19 @@ public class TransactionService {
 
     private Transaction generateTransactionSender(Account accountSender, Account accountReceiver, TransactionDTO transactionRequestDTO) {
         StringBuilder descriptionTransactionReceiver= new StringBuilder();
-        descriptionTransactionReceiver.append("DESCUENTO DE ")
+        descriptionTransactionReceiver.append(" SE REALIZO UN DESCUENTO DE ")
                 .append(transactionRequestDTO.getAmount())
-                .append("A LA CUENTA ")
+                .append(" A LA CUENTA ")
                 .append(accountSender.getUser().getFirstName())
                 .append(accountSender.getUser().getLastName())
-                .append("POR ACREDITACION A LA CUENTA ")
+                .append(" POR ACREDITACION A LA CUENTA ")
                 .append(accountReceiver.getUser().getFirstName())
                 .append(accountReceiver.getUser().getLastName())
-                .append("EL DIA ")
+                .append(" EL DIA ")
                 .append(LocalDate.now());
 
         Transaction transactionSender = Transaction.builder()
+                .amount(transactionRequestDTO.getAmount())
                 .type(TransactionTypeEnum.PAYMENT)
                 .description(descriptionTransactionReceiver.toString())
                 .account(accountSender)
