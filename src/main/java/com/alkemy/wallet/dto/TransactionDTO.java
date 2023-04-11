@@ -1,6 +1,5 @@
 package com.alkemy.wallet.dto;
 
-import com.alkemy.wallet.enums.TransactionTypeEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +10,7 @@ import lombok.Setter;
 public class TransactionDTO {
     private Long id;
     private Double amount;
-    private TransactionTypeEnum type;
+    private String type;
     private String description;
-    private AccountDTO account;
+    private Long accountId;
 }
