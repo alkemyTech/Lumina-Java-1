@@ -3,6 +3,7 @@ package com.alkemy.wallet.service;
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
+import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.alkemy.wallet.mapping.TransactionMapping;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -62,11 +64,8 @@ public class TransactionService {
                 .findAny()
                 .get();
 
-
-
         return generateTransaction(senderAccount, receiverAccount, transactionDTO);
     }
-
 
     private void equalUsers(Long senderUserId, Long receiverUserId) throws Exception {
         if(senderUserId == receiverUserId){
@@ -140,11 +139,9 @@ public class TransactionService {
                 .append(transactionRequestDTO.getAmount())
                 .append(" A LA CUENTA ")
                 .append(accountSender.getUser().getFirstName())
-                .append(" ")
                 .append(accountSender.getUser().getLastName())
                 .append(" POR ACREDITACION A LA CUENTA ")
                 .append(accountReceiver.getUser().getFirstName())
-                .append(" ")
                 .append(accountReceiver.getUser().getLastName())
                 .append(" EL DIA ")
                 .append(LocalDate.now());
@@ -174,11 +171,15 @@ public class TransactionService {
         transaction.setAccount(account);
 
         transactionRepository.save(transaction);
-
     }
 
+    public  List<TransactionDTO> transactionDTOList(Long id) {
 
+        User user = userService.getUserById(id);
+        List<Account> accounts = user.getAccounts();
+        List<Transaction> transactionList = accounts.stream().flatMap(t->t.getTransactions().stream()).collect(Collectors.toList());
+        List<TransactionDTO> transactionDTOs = TransactionMapping.convertTransactionEntityListToDtoList(transactionList);
+        return transactionDTOs;
 
-
-
+    }
 }
