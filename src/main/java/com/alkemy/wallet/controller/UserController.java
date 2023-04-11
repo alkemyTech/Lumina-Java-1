@@ -27,8 +27,7 @@ public class UserController {
     
     @PostMapping("/auth/register")
     public ResponseEntity<UserDTO> createUser(@Validated @RequestBody UserDTO userDTO){
-    	UserDTO userDTOResponse = userService.saveUser(userDTO);
-    	return ResponseEntity.ok(userDTOResponse);		
+    	return userService.saveUser(userDTO);
     }
 
     @GetMapping

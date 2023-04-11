@@ -1,9 +1,7 @@
 package com.alkemy.wallet.mapping;
 
 import com.alkemy.wallet.dto.AccountDTO;
-import com.alkemy.wallet.dto.RoleDTO;
 import com.alkemy.wallet.dto.UserDTO;
-import com.alkemy.wallet.entity.Role;
 import com.alkemy.wallet.entity.User;
 
 import java.util.List;
@@ -22,21 +20,19 @@ public class UserMapping {
                 .lastName(userEntity.getLastName())
                 .email(userEntity.getEmail())
                 .password(userEntity.getPassword())
+                .role(userEntity.getRole().getName().toString())
                 .accountsDTO(listAccountDTO)
                 .build();
     }
 
 
     public static User convertDtoToEntity(UserDTO userDTO){
-        RoleDTO roleDTO= userDTO.getRole();
-        Role role=roleMapping.convertRoleDtoToEntity(roleDTO);
 
         return User.builder()
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
                 .password(userDTO.getPassword())
-                .role(role)
                 .build();
     }
 }

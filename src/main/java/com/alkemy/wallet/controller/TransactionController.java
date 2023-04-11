@@ -19,19 +19,29 @@ public class TransactionController {
     TransactionService transactionService;
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateTransaction(@PathVariable Long id, @RequestBody TransactionDTO transactionRequestDTO) throws ChangeSetPersister.NotFoundException {
-        transactionService.updateTransaction(id, transactionRequestDTO);
+    public ResponseEntity<String> updateTransaction(@PathVariable Long id, @RequestBody TransactionDTO transactionDTO) throws ChangeSetPersister.NotFoundException {
+        transactionService.updateTransaction(id, transactionDTO);
         return ResponseEntity.ok("Transaction successfully updated.");
     }
     @PostMapping("/sendUsd/{idSender}")
-    public ResponseEntity<?> sendUsd(@PathVariable Long idSender, @RequestBody TransactionDTO transactionRequestDTO) throws Exception {
+    public ResponseEntity<?> sendUsd(@PathVariable Long idSender, @RequestBody TransactionDTO transactionDTO) throws Exception {
         try {
-            return ResponseEntity.ok(transactionService.sendUsd(transactionRequestDTO, idSender));
+            return ResponseEntity.ok(transactionService.sendUsd(transactionDTO, idSender));
         }
         catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST USD");
         }
     }
+    @PostMapping("/sendArs/{idSender}")
+    public ResponseEntity<?> sendArs(@PathVariable Long idSender, @RequestBody TransactionDTO transactionDTO) throws Exception {
+        try {
+            return ResponseEntity.ok(transactionService.sendArs(transactionDTO, idSender));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST ARS");
+        }
+    }
+
 
     @PostMapping("/payment")
     public ResponseEntity<String>makeAPayment(@RequestBody TransactionDTO transactionDTO )throws Exception{

@@ -15,20 +15,9 @@ public class TransactionMapping {
         return TransactionDTO.builder()
                 .id(transaction.getId())
                 .amount(transaction.getAmount())
-                .type(transaction.getType())
+                .type(transaction.getType().name())
                 .description(transaction.getDescription())
-                .account(accountDTO)
-                .build();
-    }
-
-    public static Transaction convertTransactionDtoToEntity(TransactionDTO transactionRequestDTO){
-        Account account = AccountMapping.convertAccountDtoToEntity(transactionRequestDTO.getAccount());
-        return Transaction.builder()
-                .id(transactionRequestDTO.getId())
-                .amount(transactionRequestDTO.getAmount())
-                .type(transactionRequestDTO.getType())
-                .account(account)
-                .transactionDate(LocalDateTime.now())
+                .accountId(transaction.getAccount().getId())
                 .build();
     }
 
@@ -38,9 +27,4 @@ public class TransactionMapping {
         return transactionRequestDTOS;
     }
 
-    public static List<Transaction> convertTransactionDTOListToEntityList(List<TransactionDTO> transactionRequestDTOS){
-        List<Transaction> transactions = transactionRequestDTOS.stream().map(a->convertTransactionDtoToEntity(a)).collect(Collectors.toList());
-
-        return transactions;
-    }
 }

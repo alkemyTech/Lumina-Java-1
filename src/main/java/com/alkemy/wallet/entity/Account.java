@@ -2,6 +2,7 @@ package com.alkemy.wallet.entity;
 
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,6 +39,7 @@ public class Account {
     @Column(name = "TRANSACTION_LIMIT", nullable = false)
     private Double transactionLimit;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "USER_ID", nullable = false)
