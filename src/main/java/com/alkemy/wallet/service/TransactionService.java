@@ -1,24 +1,20 @@
 package com.alkemy.wallet.service;
 
-import com.alkemy.wallet.dto.AccountDTO;
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
-import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.alkemy.wallet.mapping.TransactionMapping;
-import com.alkemy.wallet.repository.AccountRepository;
 import com.alkemy.wallet.repository.TransactionRepository;
-import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -181,6 +177,10 @@ public class TransactionService {
 
         transactionRepository.save(transaction);
 
+    }
+
+    public Optional<Transaction> getTransaction(Long id){
+       return transactionRepository.findById(id);
     }
 
 
