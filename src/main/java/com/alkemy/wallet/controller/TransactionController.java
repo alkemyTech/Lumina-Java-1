@@ -8,8 +8,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import javax.naming.AuthenticationException;
 
 @RestController
 @RequestMapping("/transactions")
@@ -50,9 +49,14 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> TransactionList(@PathVariable Long id) throws Exception {
+    public ResponseEntity<TransactionDTO> getTransaction(@PathVariable Long id) throws AuthenticationException {
+        return ResponseEntity.ok(transactionService.getTransaction(id));
+    }
+
+    @GetMapping("/{UserId}")
+    public ResponseEntity<?> TransactionList(@PathVariable Long UserId) throws Exception {
         try {
-            return ResponseEntity.ok(transactionService.transactionDTOList(id));
+            return ResponseEntity.ok(transactionService.transactionDTOList(UserId));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EL USUARIO NO EXISTE");
         }

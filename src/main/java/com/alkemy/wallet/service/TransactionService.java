@@ -10,8 +10,10 @@ import com.alkemy.wallet.mapping.TransactionMapping;
 import com.alkemy.wallet.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
+import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,13 +175,20 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    public  List<TransactionDTO> transactionDTOList(Long id) {
+    @PreAuthorize("isAuthenticated()")
+    public TransactionDTO getTransaction(Long id) throws AuthenticationException {
+        if(SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new AuthenticationException("User is not authenticated"){};
+        }
+        Transaction transaction= transactionRepository.findById(id).get();
+        return TransactionMapping.convertTransactionEntityToDto(transaction);
+    }
 
+    public  List<TransactionDTO> transactionDTOList(Long id) {
         User user = userService.getUserById(id);
         List<Account> accounts = user.getAccounts();
         List<Transaction> transactionList = accounts.stream().flatMap(t->t.getTransactions().stream()).collect(Collectors.toList());
         List<TransactionDTO> transactionDTOs = TransactionMapping.convertTransactionEntityListToDtoList(transactionList);
         return transactionDTOs;
-
     }
 }
