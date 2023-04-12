@@ -85,4 +85,8 @@ public class FixedTermDepositsService {
             throw new Exception("Cuenta inexistente");
         }
     }
+
+    public ResponseEntity<?> simulate(FixedTermDepositsDTO fixedTermDepositsDTO) {
+        return null;
+    }
 }

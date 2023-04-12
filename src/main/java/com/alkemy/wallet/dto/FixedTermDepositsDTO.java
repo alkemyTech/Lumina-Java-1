@@ -14,6 +14,8 @@ public class FixedTermDepositsDTO {
     private Long id;
     @NotNull(message = "El campo firstName no puede ser nulo")
     private Double amount;
+    private Double interestAmount;
+    private Double totalAmount;
     private LocalDateTime creationDate;
     private LocalDateTime closingDate;
 }

@@ -20,4 +20,9 @@ public class FixedTermDepositsController {
     public ResponseEntity<?> createFixedTermDeposits(@PathVariable Long userId,@PathVariable Long accountId,@Validated @RequestBody FixedTermDepositsDTO fixedTermDepositsDTO) throws Exception {
         return  fixedTermDepositsService.createFixedTermDeposits(userId,accountId,fixedTermDepositsDTO);
     }
+
+    @PostMapping("/simulate")
+    public ResponseEntity<?> simulate(@RequestBody FixedTermDepositsDTO fixedTermDepositsDTO){
+        return fixedTermDepositsService.simulate(fixedTermDepositsDTO);
+    }
 }
