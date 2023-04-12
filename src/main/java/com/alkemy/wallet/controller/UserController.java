@@ -4,6 +4,8 @@ import com.alkemy.wallet.dto.UserDTO;
 import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,11 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<?> getAllUsers(Pageable pageable) throws Exception {
+        return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
     @PatchMapping("/{id}")
