@@ -4,17 +4,15 @@ import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
-import com.alkemy.wallet.enums.TypeCurrency;
+import com.alkemy.wallet.enums.TypeCurrencyEnum;
 import com.alkemy.wallet.mapping.TransactionMapping;
 import com.alkemy.wallet.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Service
 public class TransactionService {
@@ -37,12 +35,12 @@ public class TransactionService {
     }
 
     public List<TransactionDTO> sendUsd(TransactionDTO transactionRequestDTO, Long idSender) throws Exception {
-        String currency = TypeCurrency.USD.name();
+        String currency = TypeCurrencyEnum.USD.name();
         return send(transactionRequestDTO,idSender, currency);
     }
 
     public List<TransactionDTO> sendArs(TransactionDTO transactionRequestDTO, Long idSender) throws Exception {
-        String currency = TypeCurrency.ARS.name();
+        String currency = TypeCurrencyEnum.ARS.name();
         return send(transactionRequestDTO,idSender, currency);
     }
 
@@ -56,17 +54,14 @@ public class TransactionService {
 
         Account receiverAccount = accountService.findById(transactionDTO.getAccountId());
 
-        Account senderAccount = accountService.getAccountsOfUser(senderUserId)
+        Account senderAccount = accountService.getUserAccounts(senderUserId)
                 .stream()
                 .filter(account -> account.getCurrency().name().equals(currency))
                 .findAny()
                 .get();
 
-
-
         return generateTransaction(senderAccount, receiverAccount, transactionDTO);
     }
-
 
     private void equalUsers(Long senderUserId, Long receiverUserId) throws Exception {
         if(senderUserId == receiverUserId){
@@ -176,9 +171,5 @@ public class TransactionService {
         transactionRepository.save(transaction);
 
     }
-
-
-
-
 
 }
