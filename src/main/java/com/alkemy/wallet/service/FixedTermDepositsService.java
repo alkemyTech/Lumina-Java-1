@@ -4,6 +4,7 @@ import com.alkemy.wallet.dto.FixedTermDepositsDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.FixedTermDeposits;
 import com.alkemy.wallet.entity.User;
+import com.alkemy.wallet.mapping.FixedTermDepositsMapping;
 import com.alkemy.wallet.repository.FixedTermDepositsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class FixedTermDepositsService {
         }
     }
 
-    private FixedTermDeposits generateFixedTermDeposit(Account account, FixedTermDepositsDTO fixedTermDepositsDTO) {
+    private FixedTermDepositsDTO generateFixedTermDeposit(Account account, FixedTermDepositsDTO fixedTermDepositsDTO) {
         Duration duration = Duration.between(fixedTermDepositsDTO.getCreationDate(), fixedTermDepositsDTO.getClosingDate());
         long daysDifference = duration.toDays();
         Double tasaFija = calculoTasaFija(fixedTermDepositsDTO.getAmount(),this.interestPercent,daysDifference);
@@ -58,7 +59,8 @@ public class FixedTermDepositsService {
                 .closingDate(fixedTermDepositsDTO.getClosingDate())
                 .account(account)
                 .build();
-        return fixedTermDepositsRepository.save(fixedTermDeposits);
+        fixedTermDepositsRepository.save(fixedTermDeposits);
+        return FixedTermDepositsMapping.convertEntityToDto(fixedTermDeposits);
     }
     //Interés = Monto del plazo fijo * Tasa de interés * (Período de tiempo en días / Días en el año)
     private Double calculoTasaFija(Double amount, Float interestPercent,Long days) {
