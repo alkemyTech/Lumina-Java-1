@@ -3,6 +3,7 @@ package com.alkemy.wallet.service;
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
+import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.alkemy.wallet.enums.TypeCurrency;
 import com.alkemy.wallet.mapping.TransactionMapping;
@@ -12,12 +13,11 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -54,9 +54,6 @@ public class TransactionService {
         Long reciverAccountId = transactionDTO.getAccountId();
         Long reciverUserId = accountService.findById(reciverAccountId).getUser().getId();
 
-    //    User userSender = userService.getUserById(senderUserId);
-     //   User userReceiver = userService.getUserById(receiverUserId);
-
         existsUser(senderUserId);
         existsUser(reciverUserId);
         equalUsers(senderUserId, reciverUserId);
@@ -69,11 +66,8 @@ public class TransactionService {
                 .findAny()
                 .get();
 
-
-
         return generateTransaction(senderAccount, receiverAccount, transactionDTO);
     }
-
 
     private void equalUsers(Long senderUserId, Long receiverUserId) throws Exception {
         if(senderUserId == receiverUserId){
@@ -179,7 +173,6 @@ public class TransactionService {
         transaction.setAccount(account);
 
         transactionRepository.save(transaction);
-
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -191,8 +184,11 @@ public class TransactionService {
         return TransactionMapping.convertTransactionEntityToDto(transaction);
     }
 
-
-
-
-
+    public  List<TransactionDTO> transactionDTOList(Long id) {
+        User user = userService.getUserById(id);
+        List<Account> accounts = user.getAccounts();
+        List<Transaction> transactionList = accounts.stream().flatMap(t->t.getTransactions().stream()).collect(Collectors.toList());
+        List<TransactionDTO> transactionDTOs = TransactionMapping.convertTransactionEntityListToDtoList(transactionList);
+        return transactionDTOs;
+    }
 }
