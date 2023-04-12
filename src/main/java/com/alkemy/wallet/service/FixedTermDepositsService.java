@@ -61,7 +61,7 @@ public class FixedTermDepositsService {
         fixedTermDepositsRepository.save(fixedTermDeposits);
         return FixedTermDepositsMapping.convertEntityToDto(fixedTermDeposits);
     }
-    //Interés = Monto del plazo fijo * Tasa de interés * (Período de tiempo en días / Días en el año)
+    //Interes = Monto del plazo fijo * Tasa de interés * (Período de tiempo en días / Días en el año)
     private Double calculoTasaFija(Double amount, Float interestPercent,Long days) {
         Double interes = amount * interestPercent * (days / 365.0);
         return interes;
@@ -83,5 +83,20 @@ public class FixedTermDepositsService {
         if(account == null){
             throw new Exception("Cuenta inexistente");
         }
+    }
+
+    public ResponseEntity<?> simulate(FixedTermDepositsDTO fixedTermDepositsDTO) {
+        Duration duration = Duration.between(fixedTermDepositsDTO.getCreationDate(), fixedTermDepositsDTO.getClosingDate());
+        long daysDifference = duration.toDays();
+        Double interesAmount = calculoTasaFija(fixedTermDepositsDTO.getAmount(),this.interestPercent,daysDifference);
+        Double total= interesAmount + fixedTermDepositsDTO.getAmount();
+        FixedTermDepositsDTO fixedTermDepositsDTOSimu = FixedTermDepositsDTO.builder()
+                .amount(fixedTermDepositsDTO.getAmount())
+                .interest(interesAmount)
+                .totalAmount(total)
+                .creationDate(fixedTermDepositsDTO.getCreationDate())
+                .closingDate(fixedTermDepositsDTO.getClosingDate())
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(fixedTermDepositsDTOSimu);
     }
 }
