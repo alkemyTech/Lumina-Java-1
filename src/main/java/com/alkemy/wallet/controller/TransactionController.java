@@ -53,10 +53,10 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getTransaction(id));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> TransactionList(@PathVariable Long id) throws Exception {
+    @GetMapping("/{UserId}")
+    public ResponseEntity<?> TransactionList(@PathVariable Long UserId) throws Exception {
         try {
-            return ResponseEntity.ok(transactionService.transactionDTOList(id));
+            return ResponseEntity.ok(transactionService.transactionDTOList(UserId));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EL USUARIO NO EXISTE");
         }
