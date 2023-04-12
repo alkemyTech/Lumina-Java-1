@@ -1,6 +1,6 @@
 package com.alkemy.wallet.enums;
 
-public enum TypeCurrency {
+public enum TypeCurrencyEnum {
     USD,
     ARS
 }

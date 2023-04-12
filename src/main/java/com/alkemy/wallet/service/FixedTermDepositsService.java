@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -92,9 +91,8 @@ public class FixedTermDepositsService {
         Double interesAmount = calculoTasaFija(fixedTermDepositsDTO.getAmount(),this.interestPercent,daysDifference);
         Double total= interesAmount + fixedTermDepositsDTO.getAmount();
         FixedTermDepositsDTO fixedTermDepositsDTOSimu = FixedTermDepositsDTO.builder()
-                .id(fixedTermDepositsDTO.getId())
                 .amount(fixedTermDepositsDTO.getAmount())
-                .interestAmount(interesAmount)
+                .interest(interesAmount)
                 .totalAmount(total)
                 .creationDate(fixedTermDepositsDTO.getCreationDate())
                 .closingDate(fixedTermDepositsDTO.getClosingDate())

@@ -3,7 +3,7 @@ package com.alkemy.wallet.dto;
 import com.alkemy.wallet.entity.FixedTermDeposits;
 import com.alkemy.wallet.entity.Transaction;
 import com.alkemy.wallet.entity.User;
-import com.alkemy.wallet.enums.TypeCurrency;
+import com.alkemy.wallet.enums.TypeCurrencyEnum;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +17,7 @@ import lombok.Setter;
 public class AccountDTO {
 	
 	 private Long id;	  
-	 private TypeCurrency currency;	   
+	 private TypeCurrencyEnum currency;
 	 private Double balance;	
 	 private boolean softDelete = Boolean.FALSE;	    
 	 private Double transactionLimit;	   

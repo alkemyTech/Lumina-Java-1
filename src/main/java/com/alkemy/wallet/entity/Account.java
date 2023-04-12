@@ -1,6 +1,6 @@
 package com.alkemy.wallet.entity;
 
-import com.alkemy.wallet.enums.TypeCurrency;
+import com.alkemy.wallet.enums.TypeCurrencyEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,7 +31,7 @@ public class Account {
     private Long id;
     @Column(name = "CURRENCY", nullable = false)
     @Enumerated(value=EnumType.STRING)
-    private TypeCurrency currency;
+    private TypeCurrencyEnum currency;
     @Column(name= "BALANCE", nullable = false)
     private Double balance;
     @Column(name = "SOFT_DELETE")
@@ -62,4 +62,5 @@ public class Account {
     @JsonIgnoreProperties({"account"})
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<FixedTermDeposits> fixedTermDeposits = new ArrayList<>();
+
 }
