@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
 import java.util.Optional;
 
 @RestController
@@ -52,9 +54,9 @@ public class TransactionController {
         return ResponseEntity.ok("transaction create");
     }
 
-    @GetMapping("/transaction/{id}")
-    public Optional<Transaction> getTransaction(@PathVariable Long id){
-        return transactionService.getTransaction(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionDTO> getTransaction(@PathVariable Long id) throws AuthenticationException {
+        return ResponseEntity.ok(transactionService.getTransaction(id));
     }
 
 
