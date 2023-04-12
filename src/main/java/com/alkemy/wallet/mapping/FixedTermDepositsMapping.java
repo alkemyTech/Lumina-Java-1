@@ -8,6 +8,7 @@ import java.util.List;
 public class FixedTermDepositsMapping {
     public static FixedTermDepositsDTO convertEntityToDto(FixedTermDeposits fixedTermDeposits){
         return FixedTermDepositsDTO.builder()
+                .id(fixedTermDeposits.getId())
                 .amount(fixedTermDeposits.getAmount())
                 .accountId(fixedTermDeposits.getAccount().getId())
                 .interest(fixedTermDeposits.getInterest())
@@ -23,4 +24,5 @@ public class FixedTermDepositsMapping {
         }
         return fixedTermDepositsDTOS;
     }
+
 }

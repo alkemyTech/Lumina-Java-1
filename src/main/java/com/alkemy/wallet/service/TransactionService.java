@@ -3,16 +3,21 @@ package com.alkemy.wallet.service;
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
+import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
 import com.alkemy.wallet.enums.TypeCurrencyEnum;
 import com.alkemy.wallet.mapping.TransactionMapping;
 import com.alkemy.wallet.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -135,11 +140,9 @@ public class TransactionService {
                 .append(transactionRequestDTO.getAmount())
                 .append(" A LA CUENTA ")
                 .append(accountSender.getUser().getFirstName())
-                .append(" ")
                 .append(accountSender.getUser().getLastName())
                 .append(" POR ACREDITACION A LA CUENTA ")
                 .append(accountReceiver.getUser().getFirstName())
-                .append(" ")
                 .append(accountReceiver.getUser().getLastName())
                 .append(" EL DIA ")
                 .append(LocalDate.now());
@@ -169,7 +172,23 @@ public class TransactionService {
         transaction.setAccount(account);
 
         transactionRepository.save(transaction);
+    }
 
+    @PreAuthorize("isAuthenticated()")
+    public TransactionDTO getTransaction(Long id) throws AuthenticationException {
+        if(SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new AuthenticationException("User is not authenticated"){};
+        }
+        Transaction transaction= transactionRepository.findById(id).get();
+        return TransactionMapping.convertTransactionEntityToDto(transaction);
+    }
+
+    public  List<TransactionDTO> transactionDTOList(Long id) {
+        User user = userService.getUserById(id);
+        List<Account> accounts = user.getAccounts();
+        List<Transaction> transactionList = accounts.stream().flatMap(t->t.getTransactions().stream()).collect(Collectors.toList());
+        List<TransactionDTO> transactionDTOs = TransactionMapping.convertTransactionEntityListToDtoList(transactionList);
+        return transactionDTOs;
     }
 
 }
