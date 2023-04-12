@@ -5,7 +5,7 @@ import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.entity.Transaction;
 import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.enums.TransactionTypeEnum;
-import com.alkemy.wallet.enums.TypeCurrency;
+import com.alkemy.wallet.enums.TypeCurrencyEnum;
 import com.alkemy.wallet.mapping.TransactionMapping;
 import com.alkemy.wallet.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 public class TransactionService {
@@ -41,12 +40,12 @@ public class TransactionService {
     }
 
     public List<TransactionDTO> sendUsd(TransactionDTO transactionRequestDTO, Long idSender) throws Exception {
-        String currency = TypeCurrency.USD.name();
+        String currency = TypeCurrencyEnum.USD.name();
         return send(transactionRequestDTO,idSender, currency);
     }
 
     public List<TransactionDTO> sendArs(TransactionDTO transactionRequestDTO, Long idSender) throws Exception {
-        String currency = TypeCurrency.ARS.name();
+        String currency = TypeCurrencyEnum.ARS.name();
         return send(transactionRequestDTO,idSender, currency);
     }
 
@@ -60,7 +59,7 @@ public class TransactionService {
 
         Account receiverAccount = accountService.findById(transactionDTO.getAccountId());
 
-        Account senderAccount = accountService.getAccountsOfUser(senderUserId)
+        Account senderAccount = accountService.getUserAccounts(senderUserId)
                 .stream()
                 .filter(account -> account.getCurrency().name().equals(currency))
                 .findAny()
@@ -191,4 +190,5 @@ public class TransactionService {
         List<TransactionDTO> transactionDTOs = TransactionMapping.convertTransactionEntityListToDtoList(transactionList);
         return transactionDTOs;
     }
+
 }

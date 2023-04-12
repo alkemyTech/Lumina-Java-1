@@ -1,8 +1,7 @@
 package com.alkemy.wallet.service;
 
 import com.alkemy.wallet.entity.User;
-import com.alkemy.wallet.service.RoleService;
-import com.alkemy.wallet.enums.TypeCurrency;
+import com.alkemy.wallet.enums.TypeCurrencyEnum;
 import com.alkemy.wallet.dto.UserDTO;
 import com.alkemy.wallet.entity.Account;
 import com.alkemy.wallet.mapping.UserMapping;
@@ -49,8 +48,8 @@ public class UserService{
         Account USDAcount = new Account();
         Account ARSAcount = new Account();
 
-        USDAcount.setCurrency(TypeCurrency.USD);
-        ARSAcount.setCurrency(TypeCurrency.ARS);
+        USDAcount.setCurrency(TypeCurrencyEnum.USD);
+        ARSAcount.setCurrency(TypeCurrencyEnum.ARS);
 
 
         USDAcount.setBalance(0d);
@@ -118,6 +117,5 @@ public class UserService{
     public User getUserById(Long userId) {
         return userRepository.findById(userId).get();
     }
-
 
 }

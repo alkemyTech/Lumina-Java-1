@@ -1,15 +1,17 @@
 package com.alkemy.wallet.service;
 
 import com.alkemy.wallet.dto.AccountDTO;
+import com.alkemy.wallet.dto.BalanceDTO;
 import com.alkemy.wallet.entity.Account;
+import com.alkemy.wallet.entity.FixedTermDeposits;
 import com.alkemy.wallet.entity.Transaction;
 import com.alkemy.wallet.entity.User;
-import com.alkemy.wallet.enums.TypeCurrency;
+import com.alkemy.wallet.enums.TypeCurrencyEnum;
 import com.alkemy.wallet.mapping.AccountMapping;
+import com.alkemy.wallet.mapping.FixedTermDepositsMapping;
 import com.alkemy.wallet.repository.AccountRepository;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class AccountService {
@@ -35,9 +38,8 @@ public class AccountService {
         return accountRepository.getById(idSender);
     }
 
-
-    public List<Account> getAccountsOfUser(Long userId) {
-       return  accountRepository.accountsOfUser(userId);
+    public List<Account> getUserAccounts(Long userId) {
+       return accountRepository.findUserAccounts(userId);
     }
 
     public void pay(Account accountReceiver, double amount) throws Exception {
@@ -93,15 +95,15 @@ public class AccountService {
         }
 
         if (exists == false) {
-            if (accountDTO.getCurrency().name().equals(TypeCurrency.ARS.name())) {
-                account.setCurrency(TypeCurrency.ARS);
+            if (accountDTO.getCurrency().name().equals(TypeCurrencyEnum.ARS.name())) {
+                account.setCurrency(TypeCurrencyEnum.ARS);
                 account.setBalance(0d);
                 account.setTransactionLimit(300000d);
                 account.setUser(user);
                 user.getAccounts().add(account);
                 accountDTOResult = AccountMapping.convertAccountEntityToDto(accountRepository.save(account));
-            } else if (accountDTO.getCurrency().name().equals(TypeCurrency.USD.name())) {
-                account.setCurrency(TypeCurrency.USD);
+            } else if (accountDTO.getCurrency().name().equals(TypeCurrencyEnum.USD.name())) {
+                account.setCurrency(TypeCurrencyEnum.USD);
                 account.setBalance(0d);
                 account.setTransactionLimit(1000d);
                 account.setUser(user);
@@ -113,6 +115,23 @@ public class AccountService {
         }
 
         return accountDTOResult;
+    }
+
+    public BalanceDTO getBalance(Long userId) {
+        List<Account> accountList = getUserAccounts(userId);
+
+        Account usdAccount = accountList.stream().filter(account -> account.getCurrency().equals(TypeCurrencyEnum.USD)).findAny().get();
+        Account arsAccount = accountList.stream().filter(account -> account.getCurrency().equals(TypeCurrencyEnum.ARS)).findAny().get();
+
+        List<FixedTermDeposits> fixedTermDepositList = Stream.concat(usdAccount.getFixedTermDeposits().stream(), arsAccount.getFixedTermDeposits().stream()).toList();
+
+        BalanceDTO balanceDTO = BalanceDTO.builder()
+                .usdBalance(usdAccount.getBalance())
+                .arsBalance(arsAccount.getBalance())
+                .fixedTermDeposits(FixedTermDepositsMapping.convertEntityListToDtoList(fixedTermDepositList))
+                .build();
+
+        return balanceDTO;
     }
 
 }

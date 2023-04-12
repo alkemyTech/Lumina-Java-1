@@ -1,12 +1,10 @@
 package com.alkemy.wallet.controller;
 
 import com.alkemy.wallet.dto.AccountDTO;
-import com.alkemy.wallet.entity.Account;
-import com.alkemy.wallet.repository.AccountRepository;
+import com.alkemy.wallet.dto.BalanceDTO;
 import com.alkemy.wallet.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -29,6 +27,12 @@ public class AccountController {
     public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO accountDTO) throws Exception {
         AccountDTO accountDTOResponse = accountService.createAccount(accountDTO);
         return ResponseEntity.ok(accountDTOResponse);
+    }
+
+    @GetMapping("/balance/{id}")
+    public ResponseEntity<BalanceDTO> getBalance(@PathVariable Long id) {
+        BalanceDTO balanceDTO = accountService.getBalance(id);
+        return ResponseEntity.ok(balanceDTO);
     }
 
 }
