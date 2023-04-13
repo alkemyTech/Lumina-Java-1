@@ -191,4 +191,27 @@ public class TransactionService {
         return transactionDTOs;
     }
 
+    public TransactionDTO makeDeposit(TransactionDTO transactionDTO) throws Exception {
+        Account accountEntity = accountService.findById(transactionDTO.getAccountId());
+        if (transactionDTO.getAmount() <= 0) {
+            throw new Exception("MONTO INVALIDO");
+        }
+        accountService.pay(accountEntity, transactionDTO.getAmount());
+        return TransactionMapping.convertTransactionEntityToDto(generateDeposit(accountEntity, transactionDTO));
+    }
+
+    private Transaction generateDeposit(Account accountEntity, TransactionDTO transactionDTO) {
+        StringBuilder description = new StringBuilder();
+        description.append("SE REALIZO UN DEPOSITO DE ")
+                .append(transactionDTO.getAmount())
+                .append(" EL DIA ")
+                .append(LocalDate.now().toString());
+
+       return transactionRepository.save(Transaction.builder()
+                .amount(transactionDTO.getAmount())
+                .type(TransactionTypeEnum.DEPOSIT)
+                .description(description.toString())
+                .account(accountService.findById(accountEntity.getId()))
+                .build());
+    }
 }
