@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.naming.AuthenticationException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -128,6 +129,7 @@ public class TransactionService {
                 .type(TransactionTypeEnum.INCOME)
                 .description(descriptionTransactionReceiver.toString())
                 .account(accountReceiver)
+                .transactionDate(LocalDateTime.now())
                 .build();
         transactionRepository.save(transactionReceiver);
         accountService.addTransaction(accountReceiver.getId(),transactionReceiver);
@@ -152,6 +154,7 @@ public class TransactionService {
                 .type(TransactionTypeEnum.PAYMENT)
                 .description(descriptionTransactionReceiver.toString())
                 .account(accountSender)
+                .transactionDate(LocalDateTime.now())
                 .build();
         transactionRepository.save(transactionSender);
         accountService.addTransaction(accountSender.getId(),transactionSender);
@@ -212,6 +215,7 @@ public class TransactionService {
                 .type(TransactionTypeEnum.DEPOSIT)
                 .description(description.toString())
                 .account(accountService.findById(accountEntity.getId()))
+                .transactionDate(LocalDateTime.now())
                 .build());
     }
 }

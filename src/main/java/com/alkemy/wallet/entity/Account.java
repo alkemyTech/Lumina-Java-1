@@ -55,6 +55,7 @@ public class Account {
     @JsonFormat(pattern="yyyy-MM-dd")
     LocalDateTime updateDate;
 
+    @JsonIgnore
     @JsonIgnoreProperties({"account"})
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Transaction> transactions= new ArrayList();

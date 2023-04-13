@@ -53,7 +53,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getTransaction(id));
     }
 
-    @GetMapping("/list/{UserId}")
+    @GetMapping("/list/{userId}")
     public ResponseEntity<?> transactionList(@PathVariable Long UserId) throws Exception {
         try {
             return ResponseEntity.ok(transactionService.transactionDTOList(UserId));
