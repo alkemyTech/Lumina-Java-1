@@ -12,15 +12,20 @@ import com.alkemy.wallet.mapping.FixedTermDepositsMapping;
 import com.alkemy.wallet.repository.AccountRepository;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static com.alkemy.wallet.mapping.AccountMapping.convertAccountEntityToDto;
 
 @Service
 public class AccountService {
@@ -36,6 +41,20 @@ public class AccountService {
 
     public Account findById(Long idSender) {
         return accountRepository.getById(idSender);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<Account> accountList(Pageable pageable) throws Exception {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        if(authentication==null || !authentication.isAuthenticated()){
+            throw new Exception("No estás autenticado");
+        }
+        try {
+            Page<Account> accountPage;
+            accountPage = accountRepository.findAll(pageable);
+            return accountPage;
+        } catch (NoSuchElementException e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     public List<Account> getUserAccounts(Long userId) {
@@ -69,7 +88,7 @@ public class AccountService {
             List<Account> accounts = user.get().getAccounts();
             List<AccountDTO> accountDTOs = new ArrayList<>();
             for (Account account : accounts) {
-                AccountDTO accountDTO = AccountMapping.convertAccountEntityToDto(account);
+                AccountDTO accountDTO = convertAccountEntityToDto(account);
                 accountDTOs.add(accountDTO);
             }
             return accountDTOs;
@@ -89,7 +108,7 @@ public class AccountService {
         for (Account accountEntity : user.getAccounts()) {
             if (accountEntity.getCurrency().name().equals(accountDTO.getCurrency().name())) {
                 account = accountEntity;
-                accountDTOResult = AccountMapping.convertAccountEntityToDto(account);
+                accountDTOResult = convertAccountEntityToDto(account);
                 exists = true;
             }
         }
@@ -101,14 +120,14 @@ public class AccountService {
                 account.setTransactionLimit(300000d);
                 account.setUser(user);
                 user.getAccounts().add(account);
-                accountDTOResult = AccountMapping.convertAccountEntityToDto(accountRepository.save(account));
+                accountDTOResult = convertAccountEntityToDto(accountRepository.save(account));
             } else if (accountDTO.getCurrency().name().equals(TypeCurrencyEnum.USD.name())) {
                 account.setCurrency(TypeCurrencyEnum.USD);
                 account.setBalance(0d);
                 account.setTransactionLimit(1000d);
                 account.setUser(user);
                 user.getAccounts().add(account);
-                accountDTOResult = AccountMapping.convertAccountEntityToDto(accountRepository.save(account));
+                accountDTOResult = convertAccountEntityToDto(accountRepository.save(account));
             } else {
                 throw new Exception("El tipo de moneda debe ser ARS o USD");
             }
