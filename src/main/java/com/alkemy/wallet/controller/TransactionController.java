@@ -107,5 +107,9 @@ public class TransactionController {
 
     }
 
-
+    @GetMapping("/paged")
+    ResponseEntity<?> transactionList(Pageable pageable) throws Exception {
+        Page<Transaction> transactions = transactionService.transactionsList(pageable);
+        return ResponseEntity.ok(transactions);
+    }
 }
