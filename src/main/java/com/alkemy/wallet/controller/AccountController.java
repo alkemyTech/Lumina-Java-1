@@ -43,4 +43,14 @@ public class AccountController {
         return ResponseEntity.ok(balanceDTO);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<AccountDTO> updateAccount(@PathVariable Long id, @RequestBody AccountDTO accountDTO) throws Exception{
+        Account account = accountService.findById(id);
+        if(account==null){
+            throw new Exception("Account not found with id " + id);
+        }
+        AccountDTO updateAccountDTO = accountService.updateAccount(id, accountDTO);
+        return ResponseEntity.ok(updateAccountDTO);
+    }
+
 }
