@@ -230,9 +230,9 @@ public class TransactionService {
             throw new Exception("No estás autenticado");
         }
         try {
-            Page<Transaction> transactionsPage;
-            transactionsPage = transactionRepository.findAll(pageable);
-            return transactionsPage;
+            Page<Transaction> transactionsPages;
+            transactionsPages = transactionRepository.findAll(pageable);
+            return transactionsPages;
         } catch (NoSuchElementException e) {
             throw new Exception(e.getMessage());
         }
