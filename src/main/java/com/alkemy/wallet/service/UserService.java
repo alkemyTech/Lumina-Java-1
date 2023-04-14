@@ -127,11 +127,6 @@ public class UserService{
     public Page<User> getAllUsers(Pageable pageable ) throws Exception {
         try {
             Page<User> usersPage = userRepository.findAll(pageable);
-            //List<UserDTO> usersDTO = new ArrayList<>();
-            //for(User userEntity : usersPage.getContent()){
-            //    usersDTO.add(UserMapping.convertEntityToDto(userEntity));
-            //}
-            //return new PageImpl<>(usersDTO, pageable, usersPage.getTotalElements());
             return usersPage;
         }catch (Exception e){
             throw new Exception(e.getMessage());
