@@ -2,6 +2,9 @@ package com.alkemy.wallet.controller;
 
 import com.alkemy.wallet.dto.TransactionDTO;
 import com.alkemy.wallet.entity.Transaction;
+import com.alkemy.wallet.entity.User;
+import com.alkemy.wallet.repository.UserRepository;
+import com.alkemy.wallet.security.util.JwTUtil;
 import com.alkemy.wallet.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/transactions")
@@ -20,6 +24,10 @@ public class TransactionController {
 
     @Autowired
     TransactionService transactionService;
+
+    private final String authorization="Authorization";
+    private JwTUtil jwTUtil;
+    private UserRepository userAux;
 
     @PatchMapping("/{id}")
     public ResponseEntity<String> updateTransaction(@PathVariable Long id, @RequestBody TransactionDTO transactionDTO) throws ChangeSetPersister.NotFoundException {
@@ -36,9 +44,16 @@ public class TransactionController {
         }
     }
 
-    @PostMapping("/sendArs/{idSender}")
-    public ResponseEntity<?> sendArs(@PathVariable Long idSender, @RequestBody TransactionDTO transactionDTO) throws Exception {
+    @PostMapping("/sendArs")
+    public ResponseEntity<?> sendArs(HttpServletRequest request, @RequestBody TransactionDTO transactionDTO) throws Exception {
+        final String authorizationHeader = request.getHeader(authorization);
+        String username = null;
+        String jwt = null;
         try {
+            jwt = authorizationHeader.substring(7);
+            username = jwTUtil.extractUsername(jwt);
+            User user = userAux.findOneByEmail(username);
+            Long idSender = user.getId();
             return ResponseEntity.ok(transactionService.sendArs(transactionDTO, idSender));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST ARS");
@@ -75,11 +90,26 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-    @GetMapping("/paged")
-    ResponseEntity<?> transactionList(Pageable pageable) throws Exception {
-        Page<Transaction> transactions =transactionService.transactionsList(pageable);
-        return ResponseEntity.ok(transactions);
+    @GetMapping("/list")
+    public ResponseEntity<?> transactionList(HttpServletRequest request) throws Exception {
+        final String authorizationHeader = request.getHeader(authorization);
+        String username = null;
+        String jwt = null;
+        try {
+            jwt = authorizationHeader.substring(7);
+            username = jwTUtil.extractUsername(jwt);
+            User user = userAux.findOneByEmail(username);
+            Long userId = user.getId();
+            return ResponseEntity.ok(transactionService.transactionDTOList(userId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EL USUARIO NO EXISTE");
+        }
+
     }
 
-
+    @GetMapping("/paged")
+    ResponseEntity<?> transactionList(Pageable pageable) throws Exception {
+        Page<Transaction> transactions = transactionService.transactionsList(pageable);
+        return ResponseEntity.ok(transactions);
+    }
 }

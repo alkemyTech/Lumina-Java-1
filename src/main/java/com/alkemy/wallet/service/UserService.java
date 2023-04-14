@@ -61,8 +61,8 @@ public class UserService{
         USDAcount.setBalance(0d);
         ARSAcount.setBalance(0d);
 
-        ARSAcount.setTransactionLimit(0d);
-        USDAcount.setTransactionLimit(0d);
+        ARSAcount.setTransactionLimit(300000d);
+        USDAcount.setTransactionLimit(1000d);
 
         ARSAcount.setUser(user);
         USDAcount.setUser(user);
