@@ -53,8 +53,8 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getTransaction(id));
     }
 
-    @GetMapping("/{UserId}")
-    public ResponseEntity<?> TransactionList(@PathVariable Long UserId) throws Exception {
+    @GetMapping("/list/{userId}")
+    public ResponseEntity<?> transactionList(@PathVariable Long UserId) throws Exception {
         try {
             return ResponseEntity.ok(transactionService.transactionDTOList(UserId));
         } catch (Exception e) {
@@ -62,4 +62,15 @@ public class TransactionController {
         }
 
     }
+
+    @PostMapping("/deposit")
+    public ResponseEntity<?> makeDeposit(@RequestBody TransactionDTO transactionDTO) throws Exception {
+        try {
+            return ResponseEntity.ok(transactionService.makeDeposit(transactionDTO));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }

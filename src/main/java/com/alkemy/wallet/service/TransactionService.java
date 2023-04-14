@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.naming.AuthenticationException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -128,6 +129,7 @@ public class TransactionService {
                 .type(TransactionTypeEnum.INCOME)
                 .description(descriptionTransactionReceiver.toString())
                 .account(accountReceiver)
+                .transactionDate(LocalDateTime.now())
                 .build();
         transactionRepository.save(transactionReceiver);
         accountService.addTransaction(accountReceiver.getId(),transactionReceiver);
@@ -152,6 +154,7 @@ public class TransactionService {
                 .type(TransactionTypeEnum.PAYMENT)
                 .description(descriptionTransactionReceiver.toString())
                 .account(accountSender)
+                .transactionDate(LocalDateTime.now())
                 .build();
         transactionRepository.save(transactionSender);
         accountService.addTransaction(accountSender.getId(),transactionSender);
@@ -191,4 +194,28 @@ public class TransactionService {
         return transactionDTOs;
     }
 
+    public TransactionDTO makeDeposit(TransactionDTO transactionDTO) throws Exception {
+        Account accountEntity = accountService.findById(transactionDTO.getAccountId());
+        if (transactionDTO.getAmount() <= 0) {
+            throw new Exception("MONTO INVALIDO");
+        }
+        accountService.pay(accountEntity, transactionDTO.getAmount());
+        return TransactionMapping.convertTransactionEntityToDto(generateDeposit(accountEntity, transactionDTO));
+    }
+
+    private Transaction generateDeposit(Account accountEntity, TransactionDTO transactionDTO) {
+        StringBuilder description = new StringBuilder();
+        description.append("SE REALIZO UN DEPOSITO DE ")
+                .append(transactionDTO.getAmount())
+                .append(" EL DIA ")
+                .append(LocalDate.now().toString());
+
+       return transactionRepository.save(Transaction.builder()
+                .amount(transactionDTO.getAmount())
+                .type(TransactionTypeEnum.DEPOSIT)
+                .description(description.toString())
+                .account(accountService.findById(accountEntity.getId()))
+                .transactionDate(LocalDateTime.now())
+                .build());
+    }
 }
