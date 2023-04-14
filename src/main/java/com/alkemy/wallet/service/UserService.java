@@ -123,7 +123,7 @@ public class UserService{
     public User getUserById(Long userId) {
         return userRepository.findById(userId).get();
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<User> getAllUsers(Pageable pageable ) throws Exception {
         try {
             Page<User> usersPage = userRepository.findAll(pageable);
