@@ -7,6 +7,9 @@ import com.alkemy.wallet.security.response.AuthenticationResponse;
 import com.alkemy.wallet.security.util.JwTUtil;
 import com.alkemy.wallet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +55,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @GetMapping("/paged")
+    public ResponseEntity<?> getAllUsers(Pageable pageable) throws Exception {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers(pageable));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) throws Exception{
         User user = userService.findById(id);
