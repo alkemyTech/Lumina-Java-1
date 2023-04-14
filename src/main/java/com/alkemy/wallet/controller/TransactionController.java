@@ -1,10 +1,13 @@
 package com.alkemy.wallet.controller;
 
 import com.alkemy.wallet.dto.TransactionDTO;
+import com.alkemy.wallet.entity.Transaction;
 import com.alkemy.wallet.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,5 +75,11 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    @GetMapping("/paged")
+    ResponseEntity<?> transactionList(Pageable pageable) throws Exception {
+        Page<Transaction> transactions =transactionService.transactionsList(pageable);
+        return ResponseEntity.ok(transactions);
+    }
+
 
 }
