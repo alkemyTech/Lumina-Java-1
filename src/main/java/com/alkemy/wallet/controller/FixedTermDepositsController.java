@@ -7,6 +7,7 @@ import com.alkemy.wallet.entity.User;
 import com.alkemy.wallet.repository.UserRepository;
 import com.alkemy.wallet.security.util.JwTUtil;
 import com.alkemy.wallet.service.FixedTermDepositsService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/fixedDeposit")
+@AllArgsConstructor
 public class FixedTermDepositsController {
+
+    @Autowired
+    private FixedTermDepositsService fixedTermDepositsService;
     private final String authorization="Authorization";
     private JwTUtil jwTUtil;
     private UserRepository userAux;
-    @Autowired
-    private FixedTermDepositsService fixedTermDepositsService;
 
     @PostMapping
     public ResponseEntity<?> createFixedTermDeposits(HttpServletRequest request, @RequestBody FixedTermDepositsDTO fixedTermDepositsDTO) throws Exception {
