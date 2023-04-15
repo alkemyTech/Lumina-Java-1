@@ -43,7 +43,7 @@ public class AccountService {
     public Account findById(Long idSender) {
         return accountRepository.getById(idSender);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
     public Page<Account> accountList(Pageable pageable) throws Exception {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         if(authentication==null || !authentication.isAuthenticated()){
@@ -78,7 +78,7 @@ public class AccountService {
         accountRepository.save(sender);
 
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
     public List<AccountDTO> accountList(Long id) throws Exception {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         if(authentication==null || !authentication.isAuthenticated()){
