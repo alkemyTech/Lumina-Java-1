@@ -97,6 +97,7 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
     @GetMapping("/list")
     public ResponseEntity<?> transactionList(HttpServletRequest request) throws Exception {
         final String authorizationHeader = request.getHeader(authorization);
@@ -111,7 +112,6 @@ public class TransactionController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EL USUARIO NO EXISTE");
         }
-
     }
 
     @GetMapping("/paged")
