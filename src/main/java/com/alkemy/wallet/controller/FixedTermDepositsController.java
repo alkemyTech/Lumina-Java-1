@@ -26,7 +26,7 @@ public class FixedTermDepositsController {
     private FixedTermDepositsService fixedTermDepositsService;
 
     @PostMapping
-    public ResponseEntity<?> createFixedTermDeposits(HttpServletRequest request, @Validated @RequestBody FixedTermDepositsDTO fixedTermDepositsDTO) throws Exception {
+    public ResponseEntity<?> createFixedTermDeposits(HttpServletRequest request, @RequestBody FixedTermDepositsDTO fixedTermDepositsDTO) throws Exception {
         final String authorizationHeader = request.getHeader(authorization);
         String username = null;
         String jwt = null;
