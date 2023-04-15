@@ -12,6 +12,7 @@ import com.alkemy.wallet.mapping.FixedTermDepositsMapping;
 import com.alkemy.wallet.repository.AccountRepository;
 import com.alkemy.wallet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -151,6 +152,14 @@ public class AccountService {
                 .build();
 
         return balanceDTO;
+    }
+
+    public AccountDTO updateAccount(Long id, AccountDTO accountDTO) throws ChangeSetPersister.NotFoundException {
+        Account accountEntity = accountRepository.findById(id).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+        Account account = AccountMapping.convertAccountDtoToEntity(accountDTO);
+        accountEntity.setTransactionLimit(account.getTransactionLimit());
+        Account savedAccount = accountRepository.save(accountEntity);
+        return AccountMapping.convertAccountEntityToDto(savedAccount);
     }
 
 }

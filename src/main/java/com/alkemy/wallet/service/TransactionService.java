@@ -10,7 +10,10 @@ import com.alkemy.wallet.mapping.TransactionMapping;
 import com.alkemy.wallet.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.naming.AuthenticationException;
@@ -18,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -218,4 +222,20 @@ public class TransactionService {
                 .transactionDate(LocalDateTime.now())
                 .build());
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<Transaction> transactionsList(Pageable pageable) throws Exception {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        if(authentication==null || !authentication.isAuthenticated()){
+            throw new Exception("No estás autenticado");
+        }
+        try {
+            Page<Transaction> transactionsPages;
+            transactionsPages = transactionRepository.findAll(pageable);
+            return transactionsPages;
+        } catch (NoSuchElementException e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
 }
