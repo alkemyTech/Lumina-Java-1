@@ -35,9 +35,16 @@ public class TransactionController {
         return ResponseEntity.ok("Transaction successfully updated.");
     }
 
-    @PostMapping("/sendUsd/{idSender}")
-    public ResponseEntity<?> sendUsd(@PathVariable Long idSender, @RequestBody TransactionDTO transactionDTO) throws Exception {
+    @PostMapping("/sendUsd")
+    public ResponseEntity<?> sendUsd(HttpServletRequest request, @RequestBody TransactionDTO transactionDTO) throws Exception {
+        final String authorizationHeader = request.getHeader(authorization);
+        String username = null;
+        String jwt = null;
         try {
+            jwt = authorizationHeader.substring(7);
+            username = jwTUtil.extractUsername(jwt);
+            User user = userAux.findOneByEmail(username);
+            Long idSender = user.getId();
             return ResponseEntity.ok(transactionService.sendUsd(transactionDTO, idSender));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

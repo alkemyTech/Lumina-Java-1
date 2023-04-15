@@ -48,6 +48,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 //EndpointsSec
                 .antMatchers(HttpMethod.GET, "/users").hasAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.GET, "/transactions/sendUsd").hasAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.GET, "/transactions/sendUsd").hasAuthority(ROLE_USER)
+                .antMatchers(HttpMethod.GET, "/fixedDeposit").hasAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.GET, "/fixedDeposit").hasAuthority(ROLE_USER)
+                .antMatchers(HttpMethod.GET, "/users/paged").hasAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.GET, "/transactions/list").hasAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.GET, "/transactions/list").hasAuthority(ROLE_USER)
                 .antMatchers(HttpMethod.GET, "/transactions/sendArs").hasAuthority(ROLE_ADMIN)
