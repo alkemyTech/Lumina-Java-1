@@ -33,8 +33,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return bCryptPasswordEncoder;
     }
 
-    private static final String ROLE_ADMIN = "ADMIN";
-    private static final String ROLE_USER = "USER";
+    private static final String ROLE_ADMIN = "USER";
+    private static final String ROLE_USER = "ADMIN";
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -42,9 +42,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 //Auth
-                .antMatchers("/users/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/users/auth/login").permitAll()
                 .antMatchers("/users/auth/register").permitAll()
-                .antMatchers(HttpMethod.POST, "/roles/auth/register").hasAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.POST, "/roles/auth/register").permitAll()
 
                 //EndpointsSec
                 .antMatchers(HttpMethod.GET, "/accounts/{id}").hasAuthority(ROLE_ADMIN)
