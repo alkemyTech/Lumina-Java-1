@@ -98,8 +98,6 @@ public class UserService{
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
-
-    @PreAuthorize("hasRole('USER')")
     public UserDTO getUser(Long id) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {

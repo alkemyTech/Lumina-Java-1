@@ -181,7 +181,6 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    @PreAuthorize("isAuthenticated()")
     public TransactionDTO getTransaction(Long id) throws AuthenticationException {
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             throw new AuthenticationException("User is not authenticated"){};
@@ -223,7 +222,6 @@ public class TransactionService {
                 .build());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public Page<Transaction> transactionsList(Pageable pageable) throws Exception {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         if(authentication==null || !authentication.isAuthenticated()){
