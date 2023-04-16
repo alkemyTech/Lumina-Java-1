@@ -33,8 +33,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return bCryptPasswordEncoder;
     }
 
-    private static final String ROLE_ADMIN = "USER";
-    private static final String ROLE_USER = "ADMIN";
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_USER = "USER";
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -47,39 +47,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/roles/auth/register").permitAll()
 
                 //EndpointsSec
-                .antMatchers(HttpMethod.GET, "/accounts/{id}").hasAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.GET, "/users/paged").hasAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.PATCH, "/users/{id}").hasAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.GET, "/accounts/{id}").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                 .antMatchers(HttpMethod.GET, "/accounts/paged").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.POST, "/accounts").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.POST, "/accounts").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.GET, "/accounts/balance/{id}").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/accounts/balance/{id}").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.PATCH, "/accounts/{id}").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.PATCH, "/accounts/{id}").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.GET, "/fixedDeposit").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/fixedDeposit").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.POST, "/fixedDeposit/simulate").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.POST, "/fixedDeposit/simulate").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.PATCH, "/transactions/{id}").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.PATCH, "/transactions/{id}").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.GET, "/transactions/sendUsd").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/transactions/sendUsd").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.GET, "/transactions/sendArs").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/transactions/sendArs").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.POST, "/transactions/payment").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.POST, "/transactions/payment").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.GET, "/transactions/{id}").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/transactions/{id}").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.GET, "/transactions/list/{userId}").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/transactions/list/{userId}").hasAuthority(ROLE_USER)
-                .antMatchers(HttpMethod.POST, "/transactions/deposit").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.POST, "/transactions/deposit").hasAuthority(ROLE_USER)
+                .antMatchers(HttpMethod.POST, "/accounts").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.GET, "/accounts/balance/{id}").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.PATCH, "/accounts/{id}").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.GET, "/fixedDeposit").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.POST, "/fixedDeposit/simulate").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.PATCH, "/transactions/{id}").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.GET, "/transactions/sendUsd").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.GET, "/transactions/sendArs").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.POST, "/transactions/payment").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.GET, "/transactions/{id}").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                .antMatchers(HttpMethod.POST, "/transactions/deposit").hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                 .antMatchers(HttpMethod.GET, "/transactions/list").hasAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.DELETE, "/users/{id}").hasAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.GET, "/users").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/users/paged").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.PATCH, "/users/{id}").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/users/{id}").hasAuthority(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/users/{id}").hasAuthority(ROLE_USER)
+
+                .antMatchers(HttpMethod.GET, "/users/{id}").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
 
                 //Docs
                 .antMatchers("/api/docs/**").permitAll()
@@ -91,7 +78,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService);
