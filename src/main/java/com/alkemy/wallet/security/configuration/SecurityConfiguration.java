@@ -63,6 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/transactions/{id}").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                 .antMatchers(HttpMethod.POST, "/transactions/deposit").hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                 .antMatchers(HttpMethod.GET, "/transactions/list").hasAuthority(ROLE_ADMIN)
+                .antMatchers(HttpMethod.GET, "/transactions/list/{userId}").hasAuthority(ROLE_USER)
                 .antMatchers(HttpMethod.DELETE, "/users/{id}").hasAuthority(ROLE_ADMIN)
                 .antMatchers(HttpMethod.GET, "/users").hasAuthority(ROLE_ADMIN)
 
